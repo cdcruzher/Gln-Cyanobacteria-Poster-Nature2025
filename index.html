@@ -12,7 +12,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Custom Animation for Modals */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -21,14 +20,13 @@
             animation: fadeIn 0.2s ease-out forwards;
         }
         .term {
-            border-bottom: 2px dotted #60a5fa; /* blue-400 */
+            border-bottom: 2px dotted #60a5fa;
             cursor: help;
         }
         .term:hover {
-            background-color: #dbeafe; /* blue-100 */
-            color: #1e40af; /* blue-800 */
+            background-color: #dbeafe;
+            color: #1e40af;
         }
-        /* Tour Highlight Animation */
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
@@ -36,7 +34,7 @@
         }
         .tour-highlight {
             animation: pulse-ring 2s infinite;
-            border-color: #facc15 !important; /* yellow-400 */
+            border-color: #facc15 !important;
             border-width: 2px;
         }
     </style>
@@ -44,41 +42,52 @@
 <body class="bg-slate-100 text-slate-900 font-sans min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start md:items-center">
-            
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg relative">
+        <!-- Language Selector (Top Right) -->
+        <div class="absolute top-4 right-4 z-20">
+            <select id="lang-select" onchange="changeLanguage(this.value)" 
+                    class="bg-blue-900 text-white text-xs py-1 px-2 rounded border border-blue-400 focus:outline-none focus:border-white">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ja">🇯🇵 日本語</option>
+            </select>
+        </div>
+
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start md:items-center mt-6 md:mt-0">
             <!-- Logo -->
             <div class="hidden md:flex flex-col items-center justify-center w-24 h-24 bg-white/10 rounded-full border-2 border-white/20 shrink-0">
                 <div class="text-3xl font-bold">CS</div>
                 <div class="text-[0.6rem] uppercase tracking-wider">Cedars Sinai</div>
             </div>
 
-            <div class="flex-1">
-                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight mb-3">
+            <div class="flex-1 w-full">
+                <h1 id="header-title" class="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight mb-3">
                     Cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity
                 </h1>
                 <div class="text-sm md:text-base text-blue-100 font-light space-y-1">
-                    <p><strong>Authors:</strong> Carlos D. Cruz-Hernández¹, Bethany Smith¹, Sandrine Billet¹, Manish Thiruvalluvan¹, et al.</p>
+                    <p><strong id="label-authors">Authors:</strong> Carlos D. Cruz-Hernández¹, Bethany Smith¹, Sandrine Billet¹, Manish Thiruvalluvan¹, et al.</p>
                     <p class="opacity-80 text-xs md:text-sm">1. Department of Medicine, Cedars-Sinai Medical Center, Los Angeles, CA 90048</p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="mt-5 flex flex-wrap items-center gap-4">
-                    <!-- Audio Tour Button -->
                     <button onclick="toggleTour()" id="tour-btn"
                             class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 px-4 py-2 rounded-lg text-sm font-bold shadow-md transition-all hover:scale-105 border border-yellow-500">
-                        <i data-lucide="headphones" class="w-4 h-4"></i> <span id="tour-text">Start Audio Tour</span>
+                        <i data-lucide="headphones" class="w-4 h-4"></i> <span id="btn-tour">Start Audio Tour</span>
                     </button>
 
                     <div class="h-6 w-px bg-blue-400/50 hidden sm:block"></div>
 
                     <a href="https://pubmed.ncbi.nlm.nih.gov/40293223/" target="_blank" rel="noopener noreferrer" 
                        class="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-105">
-                        <i data-lucide="external-link" class="w-4 h-4"></i> Read Paper
+                        <i data-lucide="external-link" class="w-4 h-4"></i> <span id="btn-read">Read Paper</span>
                     </a>
                     <a href="images/poster-annotated.jpg" download="poster-annotated.jpg" 
                        class="inline-flex items-center gap-2 bg-blue-900/50 hover:bg-blue-900/70 text-white px-4 py-2 rounded-lg text-sm font-medium border border-blue-400/30 transition-all hover:border-blue-300">
-                        <i data-lucide="download" class="w-4 h-4"></i> Save Poster
+                        <i data-lucide="download" class="w-4 h-4"></i> <span id="btn-save">Save Poster</span>
                     </a>
                 </div>
             </div>
@@ -93,50 +102,48 @@
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
                 <div class="flex items-center gap-2">
                     <i data-lucide="zap" class="text-blue-600 w-5 h-5"></i>
-                    <h2 class="text-lg font-bold text-slate-800">Study Overview (Graphical Abstract)</h2>
+                    <h2 id="ga-title" class="text-lg font-bold text-slate-800">Study Overview (Graphical Abstract)</h2>
                 </div>
                 <div class="text-xs text-slate-400 flex items-center gap-1">
                     <i data-lucide="mouse-pointer-click" class="w-3 h-3"></i>
-                    Click icons to view details
+                    <span id="ga-hint">Click icons to view details</span>
                 </div>
             </div>
             
             <div class="flex flex-col md:flex-row items-center justify-around gap-6 text-center">
-                <!-- Step 1 -->
+                <!-- GA Steps (Static Icons, Dynamic Text) -->
                 <div onclick="openModal('fig1')" class="flex flex-col items-center group cursor-pointer relative transition-transform hover:scale-105">
                     <div class="w-20 h-20 bg-green-50 border-2 border-green-100 rounded-full flex items-center justify-center mb-3 group-hover:border-green-400 group-hover:shadow-md transition-all shadow-sm">
                         <i data-lucide="microscope" class="w-8 h-8 text-green-600"></i>
                     </div>
-                    <p class="font-bold text-sm text-slate-700 group-hover:text-blue-700">Cyanobacteria</p>
+                    <p id="ga-step1" class="font-bold text-sm text-slate-700 group-hover:text-blue-700">Cyanobacteria</p>
                     <p class="text-xs text-slate-500 italic">(S. elongatus)</p>
                 </div>
                 
                 <i data-lucide="arrow-right" class="hidden md:block text-slate-300 w-8 h-8"></i>
                 <i data-lucide="arrow-down" class="md:hidden text-slate-300 w-8 h-8"></i>
 
-                <!-- Step 2 -->
                 <div onclick="openModal('fig2')" class="flex flex-col items-center group cursor-pointer relative transition-transform hover:scale-105">
                     <div class="w-20 h-20 bg-blue-50 border-2 border-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:border-blue-400 group-hover:shadow-md transition-all shadow-sm">
                         <i data-lucide="dna" class="w-8 h-8 text-blue-600"></i>
                     </div>
-                    <p class="font-bold text-sm text-slate-700 group-hover:text-blue-700">RNA Aptamer</p>
+                    <p id="ga-step2" class="font-bold text-sm text-slate-700 group-hover:text-blue-700">RNA Aptamer</p>
                     <p class="text-xs text-slate-500 italic">56merA15</p>
                 </div>
 
                 <i data-lucide="arrow-right" class="hidden md:block text-slate-300 w-8 h-8"></i>
                 <i data-lucide="arrow-down" class="md:hidden text-slate-300 w-8 h-8"></i>
 
-                <!-- Step 3 -->
                 <div onclick="openModal('fig3')" class="flex flex-col items-center group cursor-pointer relative transition-transform hover:scale-105">
                      <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-3 w-40 text-left shadow-inner group-hover:border-orange-300 group-hover:bg-orange-50">
                        <div class="flex items-center gap-2 mb-2 pb-1 border-b border-slate-200 group-hover:border-orange-200">
                           <i data-lucide="activity" class="w-3 h-3 text-orange-500"></i>
-                          <span class="text-xs font-bold text-slate-700">Mechanism</span>
+                          <span id="ga-mech-title" class="text-xs font-bold text-slate-700">Mechanism</span>
                        </div>
-                       <ul class="text-[11px] text-slate-600 space-y-1">
+                       <ul id="ga-mech-list" class="text-[11px] text-slate-600 space-y-1">
                          <li>• Binds L-Gln</li>
                          <li>• Activates GLS</li>
-                         <li>• Depletes Extracellular L-Gln</li>
+                         <li>• Depletes L-Gln</li>
                        </ul>
                     </div>
                 </div>
@@ -144,33 +151,31 @@
                 <i data-lucide="arrow-right" class="hidden md:block text-slate-300 w-8 h-8"></i>
                 <i data-lucide="arrow-down" class="md:hidden text-slate-300 w-8 h-8"></i>
 
-                <!-- Step 4 -->
                 <div onclick="openModal('fig5')" class="flex flex-col items-center group cursor-pointer relative transition-transform hover:scale-105">
                     <div class="w-20 h-20 bg-red-50 border-2 border-red-100 rounded-full flex items-center justify-center mb-3 group-hover:border-red-400 group-hover:shadow-md transition-all shadow-sm">
                         <i data-lucide="target" class="w-8 h-8 text-red-600"></i>
                     </div>
-                    <p class="font-bold text-sm text-slate-700 group-hover:text-blue-700">Tumor Suppression</p>
-                    <p class="text-xs text-slate-500 italic">Sensitivity Restored</p>
+                    <p id="ga-step3" class="font-bold text-sm text-slate-700 group-hover:text-blue-700">Tumor Suppression</p>
+                    <p id="ga-step3-sub" class="text-xs text-slate-500 italic">Sensitivity Restored</p>
                 </div>
             </div>
         </div>
 
-        <!-- Poster Grid (Container for JS Injection) -->
+        <!-- Poster Grid -->
         <div id="poster-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full auto-rows-min">
-            <!-- JavaScript will populate this -->
+            <!-- JS Injected -->
         </div>
 
     </main>
 
     <!-- Footer -->
     <footer class="bg-slate-200 p-4 text-center text-slate-500 text-xs">
-        <p>Interactive Poster Digital Twin • Created for Enhanced Accessibility</p>
+        <p id="footer-text">Interactive Poster Digital Twin • Created for Enhanced Accessibility</p>
     </footer>
 
-    <!-- Modal Template (Hidden by default) -->
+    <!-- Modal -->
     <div id="modal-backdrop" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" onclick="closeModal()">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden modal-animate" onclick="event.stopPropagation()">
-            <!-- Modal Header -->
             <div class="p-4 bg-blue-700 text-white flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2">
                     <div id="modal-icon-container"></div>
@@ -185,220 +190,360 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Modal Content -->
-            <div id="modal-content" class="p-6 overflow-y-auto grow prose prose-blue max-w-none">
-                <!-- Content Injected Here -->
-            </div>
-            
-            <!-- Modal Footer -->
+            <div id="modal-content" class="p-6 overflow-y-auto grow prose prose-blue max-w-none"></div>
             <div class="p-4 border-t bg-gray-50 text-right shrink-0">
-                <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors">
+                <button onclick="closeModal()" id="btn-close-modal" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors">
                     Close Detail
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Dictionary Tooltip (Hidden by default) -->
+    <!-- Tooltip -->
     <div id="tooltip" class="fixed hidden z-[60] max-w-xs bg-slate-800 text-white text-xs rounded shadow-xl p-3 pointer-events-none animate-in fade-in zoom-in duration-150">
         <div id="tooltip-title" class="font-bold mb-1 border-b border-slate-600 pb-1 text-blue-200"></div>
         <div id="tooltip-desc" class="leading-relaxed"></div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- DATA ---
-        
-        const DICTIONARY = {
-            "Adenocarcinoma": "A type of cancer that forms in the glandular tissue, which lines certain internal organs and makes and releases substances in the body, such as mucus, digestive juices, or other fluids.",
-            "Androgen receptor": "A protein that binds to androgens (male hormones like testosterone). It plays a key role in the development and maintenance of the male reproductive system and is a major driver of prostate cancer.",
-            "Glutamine": "An amino acid that is a building block of protein and a critical energy source for many cancer cells.",
-            "Riboswitches": "Segments of an mRNA molecule that bind to a specific small molecule, changing the production of the proteins encoded by the mRNA.",
-            "Cyanobacteria": "A phylum of bacteria that obtain their energy through photosynthesis. They are the only photosynthetic prokaryotes able to produce oxygen.",
-            "Aptamer": "Oligonucleotide or peptide molecules that bind to a specific target molecule. Aptamers are essentially 'chemical antibodies'.",
-            "Allosteric": "Relating to the alteration of the activity of a protein through the binding of an effector molecule at a specific site.",
-            "Glutaminase": "An enzyme that converts glutamine to glutamate and ammonia, playing a key role in metabolism.",
-            "Paracrine": "Relating to hormones which are released into the surrounding tissues and act on neighboring cells.",
-            "Xenografts": "A tissue graft or organ transplant from a donor of a different species from the recipient (e.g., human tumor cells in a mouse).",
-            "Orthotopic": "Occurring at the normal place. In cancer models, this means implanting tumor cells into the organ where the cancer originated (e.g., prostate cancer cells into the mouse prostate).",
-            "Kd": "The dissociation constant, a measure of how tightly a ligand binds to a protein. A lower Kd indicates tighter binding.",
-            "Seahorse experiment": "An assay using the Seahorse analyzer to measure cellular bioenergetics (respiration and glycolysis) in real-time.",
-            "Trypan blue": "A dye used to distinguish live cells from dead cells. Dead cells take up the dye and appear blue, while live cells exclude it.",
-            "FOXM1": "Forkhead Box M1, a transcription factor that regulates the expression of genes essential for cell proliferation and DNA repair.",
-            "Nanogold": "Gold nanoparticles used to label or detect specific biomolecules.",
-            "Oligonucleotides": "Short DNA or RNA molecules, oligomers, that have a wide range of applications in genetic testing, research, and forensics."
+        // --- TRANSLATION DATA ---
+        const LANGUAGES = {
+            en: {
+                title: "Cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity",
+                authors: "Authors:",
+                btnTour: "Start Audio Tour",
+                btnStopTour: "Stop Tour",
+                btnRead: "Read Paper",
+                btnSave: "Save Poster",
+                gaTitle: "Study Overview (Graphical Abstract)",
+                gaHint: "Click icons to view details",
+                gaStep1: "Cyanobacteria",
+                gaStep2: "RNA Aptamer",
+                gaMechTitle: "Mechanism",
+                gaMechList: "<li>• Binds L-Gln</li><li>• Activates GLS</li><li>• Depletes L-Gln</li>",
+                gaStep3: "Tumor Suppression",
+                gaStep3Sub: "Sensitivity Restored",
+                clickToRead: "Click to Read",
+                closeDetail: "Close Detail",
+                footer: "Interactive Poster Digital Twin • Created for Enhanced Accessibility",
+                welcomeSpeech: "Welcome to the interactive poster session. This study explores how a cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity. Please click on the Abstract to begin.",
+                nextStep: "Please continue by clicking on",
+                tourEnd: "You have reached the end of the tour. Thank you for viewing.",
+                missingImg: "Image not found",
+                placeImg: "Please ensure file exists in images/ folder"
+            },
+            es: {
+                title: "El aptámero de ARN derivado de cianobacterias apoya la sensibilidad hormonal del cáncer de próstata",
+                authors: "Autores:",
+                btnTour: "Iniciar Audio",
+                btnStopTour: "Detener",
+                btnRead: "Leer Artículo",
+                btnSave: "Guardar",
+                gaTitle: "Resumen del Estudio (Gráfico)",
+                gaHint: "Haga clic para ver detalles",
+                gaStep1: "Cianobacterias",
+                gaStep2: "Aptámero de ARN",
+                gaMechTitle: "Mecanismo",
+                gaMechList: "<li>• Une L-Gln</li><li>• Activa GLS</li><li>• Agota L-Gln</li>",
+                gaStep3: "Supresión Tumoral",
+                gaStep3Sub: "Sensibilidad Restaurada",
+                clickToRead: "Clic para Leer",
+                closeDetail: "Cerrar Detalle",
+                footer: "Póster Interactivo • Creado para Accesibilidad",
+                welcomeSpeech: "Bienvenido a la sesión de pósters interactivos. Este estudio explora cómo un aptámero de ARN derivado de cianobacterias apoya la sensibilidad hormonal del cáncer de próstata. Haga clic en el Resumen para comenzar.",
+                nextStep: "Por favor continúe haciendo clic en",
+                tourEnd: "Ha llegado al final del recorrido. Gracias por ver.",
+                missingImg: "Imagen no encontrada",
+                placeImg: "Asegúrese de que el archivo exista en la carpeta images/"
+            },
+            de: {
+                title: "Cyanobakterien-abgeleitetes RNA-Aptamer unterstützt die Hormonsensitivität bei Prostatakrebs",
+                authors: "Autoren:",
+                btnTour: "Audio-Tour Starten",
+                btnStopTour: "Tour Stoppen",
+                btnRead: "Papier Lesen",
+                btnSave: "Speichern",
+                gaTitle: "Studienübersicht",
+                gaHint: "Klicken für Details",
+                gaStep1: "Cyanobakterien",
+                gaStep2: "RNA-Aptamer",
+                gaMechTitle: "Mechanismus",
+                gaMechList: "<li>• Bindet L-Gln</li><li>• Aktiviert GLS</li><li>• Erschöpft L-Gln</li>",
+                gaStep3: "Tumorsuppression",
+                gaStep3Sub: "Sensitivität Wiederhergestellt",
+                clickToRead: "Klicken zum Lesen",
+                closeDetail: "Schließen",
+                footer: "Interaktives Poster • Erstellt für Barrierefreiheit",
+                welcomeSpeech: "Willkommen zur interaktiven Postersession. Diese Studie untersucht, wie ein RNA-Aptamer die Hormonsensitivität bei Prostatakrebs unterstützt. Bitte klicken Sie auf die Zusammenfassung, um zu beginnen.",
+                nextStep: "Bitte fahren Sie fort, indem Sie auf klicken",
+                tourEnd: "Sie haben das Ende der Tour erreicht. Danke fürs Zuschauen.",
+                missingImg: "Bild nicht gefunden",
+                placeImg: "Datei muss im Ordner images/ sein"
+            },
+            fr: {
+                title: "L'aptamère d'ARN dérivé de cyanobactéries soutient la sensibilité hormonale du cancer de la prostate",
+                authors: "Auteurs:",
+                btnTour: "Visite Audio",
+                btnStopTour: "Arrêter",
+                btnRead: "Lire l'article",
+                btnSave: "Sauvegarder",
+                gaTitle: "Aperçu de l'étude",
+                gaHint: "Cliquez pour les détails",
+                gaStep1: "Cyanobactéries",
+                gaStep2: "Aptamère ARN",
+                gaMechTitle: "Mécanisme",
+                gaMechList: "<li>• Lie L-Gln</li><li>• Active GLS</li><li>• Épuise L-Gln</li>",
+                gaStep3: "Suppression Tumorale",
+                gaStep3Sub: "Sensibilité Restaurée",
+                clickToRead: "Cliquer pour Lire",
+                closeDetail: "Fermer",
+                footer: "Poster Interactif • Créé pour l'accessibilité",
+                welcomeSpeech: "Bienvenue à la session de posters interactifs. Cette étude explore comment un aptamère d'ARN soutient la sensibilité hormonale du cancer de la prostate. Cliquez sur le Résumé pour commencer.",
+                nextStep: "Veuillez continuer en cliquant sur",
+                tourEnd: "Vous avez atteint la fin de la visite. Merci.",
+                missingImg: "Image non trouvée",
+                placeImg: "Vérifiez le dossier images/"
+            },
+            zh: {
+                title: "蓝细菌来源的RNA适配体支持前列腺癌激素敏感性",
+                authors: "作者:",
+                btnTour: "开始音频导览",
+                btnStopTour: "停止导览",
+                btnRead: "阅读论文",
+                btnSave: "保存海报",
+                gaTitle: "研究概览",
+                gaHint: "点击图标查看详情",
+                gaStep1: "蓝细菌",
+                gaStep2: "RNA适配体",
+                gaMechTitle: "机制",
+                gaMechList: "<li>• 结合 L-Gln</li><li>• 激活 GLS</li><li>• 消耗 L-Gln</li>",
+                gaStep3: "肿瘤抑制",
+                gaStep3Sub: "敏感性恢复",
+                clickToRead: "点击阅读",
+                closeDetail: "关闭详情",
+                footer: "交互式海报数字孪生 • 为增强可访问性而创建",
+                welcomeSpeech: "欢迎参加交互式海报会议。这项研究探讨了蓝细菌来源的RNA适配体如何支持前列腺癌激素敏感性。请点击摘要开始。",
+                nextStep: "请继续点击",
+                tourEnd: "您已到达导览终点。谢谢观看。",
+                missingImg: "未找到图片",
+                placeImg: "请确保文件在 images/ 文件夹中"
+            },
+            ja: {
+                title: "シアノバクテリア由来RNAアプタマーは前立腺癌のホルモン感受性を支持する",
+                authors: "著者:",
+                btnTour: "音声ツアー開始",
+                btnStopTour: "ツアー停止",
+                btnRead: "論文を読む",
+                btnSave: "ポスター保存",
+                gaTitle: "研究概要",
+                gaHint: "詳細を見るにはアイコンをクリック",
+                gaStep1: "シアノバクテリア",
+                gaStep2: "RNAアプタマー",
+                gaMechTitle: "メカニズム",
+                gaMechList: "<li>• L-Gln結合</li><li>• GLS活性化</li><li>• L-Gln枯渇</li>",
+                gaStep3: "腫瘍抑制",
+                gaStep3Sub: "感受性回復",
+                clickToRead: "クリックして読む",
+                closeDetail: "閉じる",
+                footer: "インタラクティブポスター • アクセシビリティ向上のために作成",
+                welcomeSpeech: "インタラクティブポスターセッションへようこそ。この研究は、RNAアプタマーが前立腺癌のホルモン感受性をどのように支持するかを探求します。要約をクリックして始めてください。",
+                nextStep: "次をクリックしてください：",
+                tourEnd: "ツアーの終わりに達しました。ご覧いただきありがとうございます。",
+                missingImg: "画像が見つかりません",
+                placeImg: "images/フォルダを確認してください"
+            }
         };
 
-        // Helper to generate image HTML
-        function getImgHtml(src, alt, placeholder) {
+        // --- CONTENT DATA (Structured for Localization) ---
+        const CONTENT = {
+            abstract: {
+                en: { title: "Abstract", summary: "Prostate adenocarcinoma (PCa) resistance to androgen receptor (AR) signaling inhibitor therapy is associated with elevated glutamine...", text: "<p>Prostate Adenocarcinoma (PCa) resistance to Androgen receptor (AR) signaling inhibitor therapy is associated with elevated Glutamine (L-Gln). Key Finding: The optimized Aptamer depleted L-Gln from PCa cells by both L-Gln sequestration and the recruitment of extracellular Glutaminase activity.</p>" },
+                es: { title: "Resumen", summary: "La resistencia del adenocarcinoma de próstata (CaP) a la terapia inhibidora del receptor de andrógenos (AR) está asociada con glutamina elevada...", text: "<p>La resistencia del Adenocarcinoma de Próstata (CaP) a la terapia inhibidora del receptor de andrógenos (AR) está asociada con Glutamina elevada. Hallazgo Clave: El Aptámero optimizado agotó la L-Gln de las células de CaP mediante el secuestro de L-Gln y el reclutamiento de actividad de Glutaminasa extracelular.</p>" },
+                de: { title: "Zusammenfassung", summary: "Die Resistenz des Prostata-Adenokarzinoms (PCa) gegen Androgenrezeptor (AR)-Signalweg-Inhibitoren ist mit erhöhtem Glutamin assoziiert...", text: "<p>Die Resistenz des Prostata-Adenokarzinoms ist mit erhöhtem Glutamin assoziiert. Hauptergebnis: Das optimierte Aptamer entzog PCa-Zellen L-Gln.</p>" },
+                fr: { title: "Résumé", summary: "La résistance de l'adénocarcinome de la prostate (CaP) au traitement inhibiteur du récepteur des androgènes (RA) est associée à une glutamine élevée...", text: "<p>La résistance de l'adénocarcinome de la prostate est associée à une glutamine élevée. Résultat clé : L'aptamère optimisé a épuisé la L-Gln des cellules.</p>" },
+                zh: { title: "摘要", summary: "前列腺腺癌 (PCa) 对雄激素受体 (AR) 信号抑制剂治疗的耐药性与谷氨酰胺升高有关...", text: "<p>前列腺腺癌对雄激素受体信号抑制剂治疗的耐药性与谷氨酰胺升高有关。主要发现：优化的适配体耗尽了 PCa 细胞中的 L-Gln。</p>" },
+                ja: { title: "要約", summary: "前立腺腺癌（PCa）のアンドロゲン受容体（AR）シグナル阻害療法に対する抵抗性は、グルタミン上昇と関連している...", text: "<p>前立腺腺癌の抵抗性は、グルタミン上昇と関連しています。主な発見：最適化されたアプタマーは、PCa細胞からL-Glnを枯渇させました。</p>" }
+            },
+            intro: {
+                en: { title: "Introduction", summary: "Prostate cancer therapy resistance is a significant factor leading to cancer mortality...", text: "<p>Prostate cancer therapy resistance is a significant factor leading to cancer mortality. Hypothesis: We reasoned that interrupting L-Gln uptake by its extracellular depletion in a tumor-specific manner can be a therapeutic strategy.</p>" },
+                es: { title: "Introducción", summary: "La resistencia a la terapia del cáncer de próstata es un factor significativo...", text: "<p>La resistencia a la terapia del cáncer de próstata es un factor significativo que conduce a la mortalidad. Hipótesis: Razonamos que interrumpir la captación de L-Gln mediante su agotamiento extracelular puede ser una estrategia terapéutica.</p>" },
+                de: { title: "Einleitung", summary: "Therapieresistenz bei Prostatakrebs ist ein bedeutender Faktor...", text: "<p>Therapieresistenz bei Prostatakrebs ist ein bedeutender Faktor. Hypothese: Unterbrechung der L-Gln-Aufnahme.</p>" },
+                fr: { title: "Introduction", summary: "La résistance au traitement du cancer de la prostate est un facteur important...", text: "<p>La résistance au traitement du cancer de la prostate est un facteur important. Hypothèse : Interrompre l'absorption de L-Gln.</p>" },
+                zh: { title: "介绍", summary: "前列腺癌治疗耐药性是导致癌症死亡的重要因素...", text: "<p>前列腺癌治疗耐药性是导致癌症死亡的重要因素。假设：我们推断中断 L-Gln 摄取可以作为一种治疗策略。</p>" },
+                ja: { title: "序論", summary: "前立腺癌治療抵抗性は、癌死亡の重要な要因です...", text: "<p>前立腺癌治療抵抗性は、癌死亡の重要な要因です。仮説：L-Gln取り込みを遮断することが治療戦略になり得ると推論しました。</p>" }
+            },
+            fig1: {
+                en: { title: "Fig 1: Aptamer Optimization", summary: "Optimization of the glnA aptamer through in silico modifications.", text: "<p>(A) Sunburst plot. (B) Secondary structure. (C) 3D structure of the 56mer bound to L-Gln.</p>" },
+                es: { title: "Fig 1: Optimización del Aptámero", summary: "Optimización del aptámero glnA mediante modificaciones in silico.", text: "<p>(A) Gráfico Sunburst. (B) Estructura secundaria. (C) Estructura 3D del 56mer unido a L-Gln.</p>" },
+                de: { title: "Abb 1: Aptamer-Optimierung", summary: "Optimierung des glnA-Aptamers.", text: "<p>(A) Sunburst-Diagramm. (B) Sekundärstruktur.</p>" },
+                fr: { title: "Fig 1: Optimisation de l'aptamère", summary: "Optimisation de l'aptamère glnA.", text: "<p>(A) Diagramme solaire. (B) Structure secondaire.</p>" },
+                zh: { title: "图 1: 适配体优化", summary: "通过计算机模拟修改优化 glnA 适配体。", text: "<p>(A) 旭日图。(B) 二级结构。</p>" },
+                ja: { title: "図 1: アプタマー最適化", summary: "インシリコ修飾によるglnAアプタマーの最適化。", text: "<p>(A) サンバースト図。(B) 二次構造。</p>" }
+            },
+            fig2: {
+                en: { title: "Fig 2: L-Gln Depletion", summary: "Characterization of the aptamer's ability to deplete L-Gln.", text: "<p>Characterization of L-Gln binding. Kd was calculated to be 24.3 nM.</p>" },
+                es: { title: "Fig 2: Agotamiento de L-Gln", summary: "Caracterización de la capacidad del aptámero para agotar L-Gln.", text: "<p>Caracterización de la unión a L-Gln. La Kd se calculó en 24.3 nM.</p>" },
+                de: { title: "Abb 2: L-Gln-Verarmung", summary: "Charakterisierung der L-Gln-Verarmung.", text: "<p>Charakterisierung der Bindung. Kd betrug 24.3 nM.</p>" },
+                fr: { title: "Fig 2: Épuisement de L-Gln", summary: "Caractérisation de l'épuisement.", text: "<p>Caractérisation de la liaison. Kd était de 24.3 nM.</p>" },
+                zh: { title: "图 2: L-Gln 消耗", summary: "适配体消耗 L-Gln 能力的表征。", text: "<p>L-Gln 结合表征。Kd 计算为 24.3 nM。</p>" },
+                ja: { title: "図 2: L-Gln 枯渇", summary: "L-Glnを枯渇させるアプタマー能力の特性評価。", text: "<p>結合の特性評価。Kdは24.3 nMと計算されました。</p>" }
+            },
+            fig3: {
+                en: { title: "Fig 3: GLS Cooperation", summary: "Investigation of cooperation between Glutaminase (GLS) and aptamer.", text: "<p>Interaction enhances enzymatic activity, serving as an allosteric activator for GLS.</p>" },
+                es: { title: "Fig 3: Cooperación GLS", summary: "Investigación de la cooperación entre Glutaminasa y el aptámero.", text: "<p>La interacción mejora la actividad enzimática, sirviendo como activador alostérico.</p>" },
+                de: { title: "Abb 3: GLS-Kooperation", summary: "Untersuchung der Kooperation.", text: "<p>Interaktion verstärkt enzymatische Aktivität.</p>" },
+                fr: { title: "Fig 3: Coopération GLS", summary: "Investigation de la coopération.", text: "<p>L'interaction améliore l'activité enzymatique.</p>" },
+                zh: { title: "图 3: GLS 合作", summary: "谷氨酰胺酶 (GLS) 与适配体之间合作的研究。", text: "<p>相互作用增强了酶活性。</p>" },
+                ja: { title: "図 3: GLS 協力", summary: "グルタミナーゼ (GLS) とアプタマー間の協力の調査。", text: "<p>相互作用は酵素活性を高めます。</p>" }
+            },
+            fig4: {
+                en: { title: "Fig 4: FGF8 Regulation", summary: "Impact of L-Gln depletion on FGF8 and drug sensitivity.", text: "<p>(A) Seahorse experiment results showing oxygen consumption rates.</p>" },
+                es: { title: "Fig 4: Regulación de FGF8", summary: "Impacto del agotamiento de L-Gln en FGF8.", text: "<p>(A) Resultados del experimento Seahorse mostrando tasas de consumo de oxígeno.</p>" },
+                de: { title: "Abb 4: FGF8-Regulation", summary: "Auswirkung auf FGF8.", text: "<p>(A) Seahorse-Experiment Ergebnisse.</p>" },
+                fr: { title: "Fig 4: Régulation FGF8", summary: "Impact sur FGF8.", text: "<p>(A) Résultats de l'expérience Seahorse.</p>" },
+                zh: { title: "图 4: FGF8 调节", summary: "L-Gln 消耗对 FGF8 的影响。", text: "<p>(A) Seahorse 实验结果。</p>" },
+                ja: { title: "図 4: FGF8 調節", summary: "L-Gln 枯渇が FGF8 に与える影響。", text: "<p>(A) シーホース実験結果。</p>" }
+            },
+            fig5: {
+                en: { title: "Fig 5: In Vivo Effect", summary: "Testing efficacy in live models.", text: "<p>L-Gln depletion complements AR inhibition. Surviving cells quantified by trypan blue.</p>" },
+                es: { title: "Fig 5: Efecto In Vivo", summary: "Probando eficacia en modelos vivos.", text: "<p>El agotamiento complementa la inhibición de AR. Células supervivientes cuantificadas.</p>" },
+                de: { title: "Abb 5: In-vivo-Effekt", summary: "Testen der Wirksamkeit.", text: "<p>Verarmung ergänzt AR-Hemmung.</p>" },
+                fr: { title: "Fig 5: Effet In Vivo", summary: "Test de l'efficacité.", text: "<p>L'épuisement complète l'inhibition des RA.</p>" },
+                zh: { title: "图 5: 体内效应", summary: "在活体模型中测试功效。", text: "<p>耗竭补充了 AR 抑制。</p>" },
+                ja: { title: "図 5: 生体内の効果", summary: "生体モデルでの有効性試験。", text: "<p>枯渇はAR阻害を補完します。</p>" }
+            },
+            fig6: {
+                en: { title: "Fig 6: Nanoparticles", summary: "Using gold nanoparticles for targeted delivery.", text: "<p>Targeted depletion by 56merA15-AuNP support enzalutamide sensitivity.</p>" },
+                es: { title: "Fig 6: Nanopartículas", summary: "Uso de nanopartículas de oro para entrega dirigida.", text: "<p>El agotamiento dirigido por 56merA15-AuNP apoya la sensibilidad.</p>" },
+                de: { title: "Abb 6: Nanopartikel", summary: "Verwendung von Goldnanopartikeln.", text: "<p>Gezielte Verarmung unterstützt Sensitivität.</p>" },
+                fr: { title: "Fig 6: Nanoparticules", summary: "Utilisation de nanoparticules d'or.", text: "<p>L'épuisement ciblé soutient la sensibilité.</p>" },
+                zh: { title: "图 6: 纳米粒子", summary: "使用金纳米粒子进行靶向递送。", text: "<p>靶向耗竭支持敏感性。</p>" },
+                ja: { title: "図 6: ナノ粒子", summary: "標的送達のための金ナノ粒子の使用。", text: "<p>標的枯渇は感受性を支持します。</p>" }
+            },
+            discussion: {
+                en: { title: "Discussion", summary: "PCa resistance is a leading cause of mortality...", text: "<p>Our work revealed a novel aptamer with catalytic enhancer properties for L-Gln depletion in coupling glutaminase activity.</p>" },
+                es: { title: "Discusión", summary: "La resistencia es una causa principal de mortalidad...", text: "<p>Nuestro trabajo reveló un nuevo aptámero con propiedades potenciadoras catalíticas para el agotamiento de L-Gln.</p>" },
+                de: { title: "Diskussion", summary: "Resistenz ist eine Hauptursache...", text: "<p>Unsere Arbeit enthüllte ein neuartiges Aptamer.</p>" },
+                fr: { title: "Discussion", summary: "La résistance est une cause majeure...", text: "<p>Notre travail a révélé un nouvel aptamère.</p>" },
+                zh: { title: "讨论", summary: "耐药性是死亡的主要原因...", text: "<p>我们的工作揭示了一种新型适配体。</p>" },
+                ja: { title: "考察", summary: "抵抗性は死亡の主な原因です...", text: "<p>私たちの研究は、新しいアプタマーを明らかにしました。</p>" }
+            },
+            references: {
+                en: { title: "References", summary: "Key citations.", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li><li>Mishra et al.</li><li>Ames TD et al.</li></ol>" },
+                es: { title: "Referencias", summary: "Citas clave.", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li><li>Mishra et al.</li><li>Ames TD et al.</li></ol>" },
+                de: { title: "Referenzen", summary: "Wichtige Zitate.", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li></ol>" },
+                fr: { title: "Références", summary: "Citations clés.", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li></ol>" },
+                zh: { title: "参考文献", summary: "主要引用。", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li></ol>" },
+                ja: { title: "参考文献", summary: "主な引用。", text: "<ol class='list-decimal pl-5'><li>Siegel RL et al.</li><li>Xu L et al.</li></ol>" }
+            }
+        };
+
+        // --- APP STATE ---
+        let currentLang = 'en';
+        let isTourActive = false;
+        let currentTourIndex = -1;
+        const synth = window.speechSynthesis;
+
+        // Image Map to ensure correct image is loaded per ID
+        const IMG_MAP = {
+            fig1: 'images/fig1.png',
+            fig2: 'images/fig2.png',
+            fig3: 'images/fig3.png',
+            fig4: 'images/fig4.png',
+            fig5: 'images/fig5.png',
+            fig6: 'images/fig6.png'
+        };
+
+        // --- CORE FUNCTIONS ---
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const t = LANGUAGES[lang];
+
+            // 1. Update Static Header & UI
+            document.getElementById('header-title').innerText = t.title;
+            document.getElementById('label-authors').innerText = t.authors;
+            document.getElementById('btn-tour').innerText = isTourActive ? t.btnStopTour : t.btnTour;
+            document.getElementById('btn-read').innerText = t.btnRead;
+            document.getElementById('btn-save').innerText = t.btnSave;
+            document.getElementById('footer-text').innerText = t.footer;
+            document.getElementById('btn-close-modal').innerText = t.closeDetail;
+            
+            // 2. Update Graphical Abstract
+            document.getElementById('ga-title').innerText = t.gaTitle;
+            document.getElementById('ga-hint').innerText = t.gaHint;
+            document.getElementById('ga-step1').innerText = t.gaStep1;
+            document.getElementById('ga-step2').innerText = t.gaStep2;
+            document.getElementById('ga-mech-title').innerText = t.gaMechTitle;
+            document.getElementById('ga-mech-list').innerHTML = t.gaMechList;
+            document.getElementById('ga-step3').innerText = t.gaStep3;
+            document.getElementById('ga-step3-sub').innerText = t.gaStep3Sub;
+
+            // 3. Re-render Grid
+            renderGrid();
+
+            // 4. Close Modal if open (to reset content)
+            document.getElementById('modal-backdrop').classList.add('hidden');
+        }
+
+        function getImgHtml(id) {
+            const src = IMG_MAP[id];
+            if (!src) return '';
+            
+            const t = LANGUAGES[currentLang];
+            // SVG Placeholder that looks like a missing image icon
+            const fallbackSvg = `data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='3' width='18' height='18' rx='2' ry='2'/%3e%3ccircle cx='8.5' cy='8.5' r='1.5'/%3e%3cpolyline points='21 15 16 10 5 21'/%3e%3c/svg%3e`;
+            
             return `
-            <div class="mb-4 group relative w-full">
-                <img src="${src}" alt="${alt}" 
-                    class="w-full h-auto rounded-lg shadow-md border border-gray-200"
-                    onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\\'w-full h-64 bg-gray-50 rounded flex flex-col items-center justify-center border-2 border-dashed border-gray-300 mb-4 p-4 text-center\\'><i data-lucide=\\'image\\' class=\\'w-8 h-8 text-gray-300 mb-2\\'></i><span class=\\'text-gray-500 italic mb-2 font-medium\\'>${placeholder}</span><div class=\\'text-xs text-red-400 bg-red-50 px-2 py-1 rounded border border-red-100 max-w-full truncate\\'>Missing: ${src}</div></div>'; lucide.createIcons();"
+            <div class="mb-4 group relative w-full bg-gray-50 border border-gray-200 rounded-lg overflow-hidden flex items-center justify-center min-h-[200px]">
+                <img src="${src}" 
+                    class="w-full h-auto object-contain cursor-zoom-in"
+                    onerror="this.onerror=null; this.src='${fallbackSvg}'; this.className='w-16 h-16 opacity-50 my-8'; this.nextElementSibling.classList.remove('hidden');"
                 />
+                <div class="hidden absolute bottom-2 left-0 right-0 text-center text-xs text-red-500 bg-red-50 py-1">
+                    ${t.missingImg}: ${src}
+                </div>
             </div>`;
         }
 
-        // Helper for Terms
-        function t(word, display) {
-            return `<span class="term" data-word="${word}">${display || word}</span>`;
-        }
-
-        // Added 'speechText' for clean audio reading
-        const POSTER_DATA = [
-            {
-                id: 'abstract', title: 'Abstract', icon: 'file-text',
-                summary: 'Prostate adenocarcinoma (PCa) resistance to androgen receptor (AR) signaling inhibitor therapy is associated with elevated glutamine (L-Gln)...',
-                speechText: "Abstract. Prostate adenocarcinoma resistance to androgen receptor signaling inhibitor therapy is associated with elevated glutamine. Key Finding: The optimized aptamer depleted L-Gln from PCa cells by both L-Gln sequestration and the recruitment of extracellular glutaminase activity.",
-                content: `
-                    <div class="space-y-4">
-                        <p>Prostate ${t('Adenocarcinoma', 'adenocarcinoma')} (PCa) resistance to ${t('Androgen receptor')} (AR) signaling inhibitor therapy is associated with elevated ${t('Glutamine', 'glutamine')} (L-Gln), but the underlying mechanism and therapeutic options stay unresolved.</p>
-                        <p>${t('Glutamine')} sensors, present in conserved ${t('Riboswitches', 'riboswitches')} (glnA), control nitrogen metabolism in many organisms, like ${t('Cyanobacteria', 'cyanobacteria')}. Iterative in silico modifications of glnA found in <em>Synechococcus elongatus</em> and thermodynamic analysis of a 56mer ${t('Aptamer', 'aptamer')} resulted in high L-Gln specificity and affinity.</p>
-                        <p><strong>Key Finding:</strong> The optimized ${t('Aptamer', 'aptamer')} depleted L-Gln from PCa cells by both L-Gln sequestration and the recruitment of extracellular ${t('Glutaminase', 'glutaminase')} activity, serving as an ${t('Allosteric', 'allosteric')} activator.</p>
-                    </div>`
-            },
-            {
-                id: 'intro', title: 'Introduction', icon: 'info',
-                summary: 'Prostate cancer therapy resistance is a significant factor leading to cancer mortality in American men...',
-                speechText: "Introduction. Prostate cancer therapy resistance is a significant factor leading to cancer mortality. Our hypothesis is that interrupting L-Gln uptake by its extracellular depletion in a tumor-specific manner can be a therapeutic strategy.",
-                content: `
-                    <div class="space-y-4">
-                        <p>Prostate cancer therapy resistance is a significant factor leading to cancer mortality in American men. Androgen signaling plays a critical role in the development and progression of prostate cancer (PCa). Accordingly, it is the primary target for metastatic PCa and can complement first line therapies for localized disease.</p>
-                        <p>However, inherent to the disease, there are multiple mechanisms can lead to PCa castrate resistance (CRPC), inclusive of ${t('Androgen receptor', 'androgen receptor')} (AR) amplification or loss, expression of AR splice variants, as well as ${t('Paracrine', 'paracrine')} factors.</p>
-                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
-                            <h4 class="font-bold text-blue-900">Hypothesis</h4>
-                            <p class="text-sm text-blue-800 mt-1">We reasoned that interrupting L-Gln uptake by its extracellular depletion in a tumor-specific manner can be a therapeutic strategy bypassing metabolic adaptation of a specific enzyme or transporter.</p>
-                        </div>
-                    </div>`
-            },
-            {
-                id: 'fig1', title: 'Fig 1: Synechococcus elongatus glnA aptamer optimization', icon: 'microscope',
-                summary: 'Optimization of the glnA aptamer through in silico modifications.',
-                speechText: "Figure 1. Synechococcus elongatus glnA aptamer optimization. The Sunburst plot illustrates the top level cyanobacteria taxonomic group. We also show the Secondary structure and the 3D structure of the 56mer bound to L-Gln.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig1.png', 'Figure 1', "Place 'fig1.png' in images folder")}
-                        <p><strong>(A)</strong> Sunburst plot illustrates the top level ${t('Cyanobacteria', 'cyanobacteria')} taxonomic group in the center.</p>
-                        <p><strong>(B)</strong> Secondary structure showing the range of 'bulges' Watson-Crick G-C pair through P1 and B-Loop (blue dashed line).</p>
-                        <p><strong>(C)</strong> 3D structure of the 56mer bound to L-Gln within the B loop pocket.</p>
-                    </div>`
-            },
-            {
-                id: 'fig2', title: 'Fig 2: 56merA15-mediated L-Gln depletion', icon: 'activity',
-                summary: 'Characterization of the aptamer\'s ability to deplete L-Gln.',
-                speechText: "Figure 2. 56merA15-mediated L-Gln depletion. Characterization of L-Gln binding aptamers. The Kd was calculated to be 24.3 nM, indicating high affinity binding.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig2.png', 'Figure 2', "Place 'fig2.png' in images folder")}
-                        <p>Characterization of L-Gln binding ${t('Aptamer', 'aptamers')}. Short complementary ${t('Oligonucleotides', 'oligonucleotides')} were used to identify the L-Gln binding pocket through ${t('Nanogold', 'nanogold')} binding assay.</p>
-                        <p>The ${t('Kd')} was calculated to be 24.3 nM, indicating high affinity binding.</p>
-                    </div>`
-            },
-            {
-                id: 'fig3', title: 'Fig 3: GLS - Aptamer cooperation', icon: 'zap',
-                summary: 'Investigation of the cooperation between Glutaminase (GLS) and the aptamer.',
-                speechText: "Figure 3. GLS, Aptamer cooperation. The interaction enhances the enzymatic activity, serving as an allosteric activator for GLS, leading to more efficient L-Gln depletion.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig3.png', 'Figure 3', "Place 'fig3.png' in images folder")}
-                        <p>The interaction enhances the enzymatic activity, serving as an ${t('Allosteric', 'allosteric')} activator for ${t('Glutaminase', 'GLS')}, leading to more efficient L-Gln depletion in the extracellular space.</p>
-                    </div>`
-            },
-            {
-                id: 'fig4', title: 'Fig 4: L-Gln regulation of FGF8 and ARSi sensitivity', icon: 'activity',
-                summary: 'Impact of L-Gln depletion on FGF8 expression and drug sensitivity.',
-                speechText: "Figure 4. L-Gln regulation of FGF8 and ARSi sensitivity. We analyzed the Impact of L-Gln depletion on 22Rv1 cells. Seahorse experiment results show oxygen consumption rates.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig4.png', 'Figure 4', "Place 'fig4.png' in images folder")}
-                        <p>Impact of L-Gln depletion on 22Rv1 cells.</p>
-                        <ul class="list-disc pl-5 space-y-2 text-sm">
-                            <li><strong>(A)</strong> ${t('Seahorse experiment')} results showing oxygen consumption rates.</li>
-                            <li><strong>(B)</strong> RNA Sequencing analysis of C4-2B and 22Rv1.</li>
-                            <li><strong>(E)</strong> FGF8 promoter was tested in the presence and absence of 56merA15.</li>
-                        </ul>
-                    </div>`
-            },
-            {
-                id: 'fig5', title: 'Fig 5: 56merA15 effect in vivo', icon: 'microscope',
-                summary: 'Testing the efficacy of the 56merA15 aptamer in live models.',
-                speechText: "Figure 5. 56merA15 effect in vivo. L-Gln depletion complements AR inhibition. Surviving 22Rv1 cells were quantified by trypan blue exclusion.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig5.png', 'Figure 5', "Place 'fig5.png' in images folder")}
-                        <p>L-Gln depletion complements AR inhibition. Surviving 22Rv1 cells were quantified by ${t('Trypan blue', 'trypan blue')} exclusion.</p>
-                        <p>${t('Orthotopic')} graft tissues from mice treated with apalutamide were evaluated for the expression of ${t('FOXM1')}.</p>
-                    </div>`
-            },
-            {
-                id: 'fig6', title: 'Fig 6: Tumor targeting by aptamer functionalization', icon: 'target',
-                summary: 'Using gold nanoparticles (AuNPs) for targeted delivery.',
-                speechText: "Figure 6. Tumor targeting by aptamer functionalization. Targeted L-Gln depletion by 56merA15-Gold-Nanoparticles supports enzalutamide sensitivity.",
-                content: `
-                    <div class="space-y-4">
-                        ${getImgHtml('images/fig6.png', 'Figure 6', "Place 'fig6.png' in images folder")}
-                        <p>Targeted L-Gln depletion by 56merA15-AuNP support enzalutamide sensitivity.</p>
-                        <div class="bg-yellow-50 p-3 rounded border border-yellow-200"><p class="text-sm text-yellow-800"><strong>Observation:</strong> Absorbance measured by UV spectrophotometry.</p></div>
-                        <p>Subcutaneous 22Rv1/CAF ${t('Xenografts', 'xenografts')} were expanded for 2 weeks.</p>
-                    </div>`
-            },
-            {
-                id: 'discussion', title: 'Discussion', icon: 'book-open',
-                summary: 'PCa resistance to AR signaling inhibitor therapy is a leading cause of mortality...',
-                speechText: "Discussion. Our work revealed a novel aptamer with catalytic enhancer properties for L-Gln depletion in coupling glutaminase activity.",
-                content: `
-                    <div class="space-y-4">
-                        <p>Multiple approaches can be taken to address the observed elevation in L-Gln associated with hormone therapy resistance.</p>
-                        <p>Our work revealed a novel ${t('Aptamer', 'aptamer')} with catalytic enhancer properties for L-Gln depletion in coupling ${t('Glutaminase', 'glutaminase')} activity.</p>
-                    </div>`
-            },
-            {
-                id: 'references', title: 'References', icon: 'book',
-                summary: 'Key citations for this study.',
-                speechText: "References. Key citations include works by Siegel, Xu, Mishra, and Ames.",
-                content: `
-                    <ol class="list-decimal pl-5 space-y-1 text-xs">
-                        <li>Siegel RL, Giaquinto AN, Jemal A. Cancer statistics, 2024. CA Cancer J Clin 2024;74:12-49.</li>
-                        <li>Xu L, Zhao E, Butler W, Xu H, Song N, Chen X, et al. Targeting glutamine metabolism... Oncogene 2022;41:1641-56.</li>
-                        <li>Mishra, Rajeev, et al. "Stromal Epigenetic Alterations Drive Metabolic and Neuroendocrine Prostate Cancer Reprogramming." J Clin Invest 2018.</li>
-                        <li>Ames TD, Breaker RR. Bacterial aptamers that selectively bind glutamine. RNA Biol 2011;8:82-9.</li>
-                    </ol>`
-            }
-        ];
-
-        // --- RENDER FUNCTIONS ---
-
         function renderGrid() {
             const grid = document.getElementById('poster-grid');
+            grid.innerHTML = ''; // Clear existing
+            
+            const keys = Object.keys(CONTENT);
             const columns = [[], [], [], []];
             
-            // Distribute items into columns (Mocking the Masonry/Grid layout)
-            POSTER_DATA.forEach((item, index) => {
-                if(index < 2) columns[0].push(item);
-                else if(index < 5) columns[1].push(item);
-                else if(index < 7) columns[2].push(item);
-                else columns[3].push(item);
+            // Distribute keys into columns
+            keys.forEach((key, index) => {
+                if(index < 2) columns[0].push(key);
+                else if(index < 5) columns[1].push(key);
+                else if(index < 7) columns[2].push(key);
+                else columns[3].push(key);
             });
 
-            columns.forEach(colItems => {
+            const t = LANGUAGES[currentLang];
+
+            columns.forEach(colKeys => {
                 const colDiv = document.createElement('div');
                 colDiv.className = 'flex flex-col gap-4';
-                colItems.forEach(item => {
+                
+                colKeys.forEach(key => {
+                    const data = CONTENT[key][currentLang];
+                    const iconMap = { abstract:'file-text', intro:'info', fig1:'microscope', fig2:'activity', fig3:'zap', fig4:'activity', fig5:'microscope', fig6:'target', discussion:'book-open', references:'book' };
+                    
                     const card = document.createElement('div');
-                    card.id = `card-${item.id}`; // Add ID for tour highlighting
+                    card.id = `card-${key}`;
                     card.className = "group relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all duration-300 flex flex-col";
-                    card.onclick = () => openModal(item.id);
+                    card.onclick = () => openModal(key);
                     card.innerHTML = `
                         <div class="bg-blue-900 text-white p-2 px-3 flex justify-between items-center">
-                            <h3 class="font-bold text-xs uppercase tracking-wider truncate flex-1">${item.title}</h3>
+                            <h3 class="font-bold text-xs uppercase tracking-wider truncate flex-1">${data.title}</h3>
                             <i data-lucide="maximize-2" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </div>
                         <div class="p-4 flex-1 flex flex-col relative">
-                            <div class="text-gray-600 text-sm line-clamp-6 leading-relaxed">${item.summary}</div>
+                            <div class="text-gray-600 text-sm line-clamp-6 leading-relaxed">${data.summary}</div>
                             <div class="absolute inset-0 bg-blue-50/0 group-hover:bg-blue-50/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
-                                <span class="bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Click to Read</span>
+                                <span class="bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">${t.clickToRead}</span>
                             </div>
                         </div>
                     `;
@@ -406,100 +551,102 @@
                 });
                 grid.appendChild(colDiv);
             });
+            lucide.createIcons();
         }
 
-        function openModal(id) {
-            // Tour Logic: Stop instruction speech if playing
-            if(isTourActive) {
-                stopSpeaking();
-            }
+        function openModal(key) {
+            if(isTourActive) stopSpeaking();
 
-            const data = POSTER_DATA.find(d => d.id === id);
-            if(!data) return;
+            const data = CONTENT[key][currentLang];
+            const t = LANGUAGES[currentLang];
+            const iconMap = { abstract:'file-text', intro:'info', fig1:'microscope', fig2:'activity', fig3:'zap', fig4:'activity', fig5:'microscope', fig6:'target', discussion:'book-open', references:'book' };
 
-            // Remove highlight if this was the suggested card
-            document.getElementById(`card-${id}`).classList.remove('tour-highlight');
+            // Remove highlight
+            document.getElementById(`card-${key}`).classList.remove('tour-highlight');
 
+            // Populate Modal
             document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-icon-container').innerHTML = `<i data-lucide="${data.icon}" class="w-5 h-5"></i>`;
-            document.getElementById('modal-content').innerHTML = data.content;
+            document.getElementById('modal-icon-container').innerHTML = `<i data-lucide="${iconMap[key]}" class="w-5 h-5"></i>`;
+            
+            // Inject content + Image if applicable
+            let htmlContent = data.text;
+            if(key.startsWith('fig')) {
+                htmlContent = getImgHtml(key) + htmlContent;
+            }
+            document.getElementById('modal-content').innerHTML = htmlContent;
             
             const modal = document.getElementById('modal-backdrop');
             modal.classList.remove('hidden');
-            
-            // Refresh icons inside the newly injected modal content
             lucide.createIcons();
 
-            // Tour Logic: Auto-speak content
+            // Tour Logic
             if(isTourActive) {
-                // Determine next index for later
-                currentTourIndex = POSTER_DATA.findIndex(d => d.id === id);
-                speak(data.speechText || data.summary);
+                // Find index of this key
+                const keys = Object.keys(CONTENT);
+                currentTourIndex = keys.indexOf(key);
+                
+                // Speak summary or clean text
+                let textToSpeak = document.getElementById('modal-content').innerText;
+                if(textToSpeak.length > 200) textToSpeak = textToSpeak.substring(0, 200); // Limit speech length
+                speak(textToSpeak);
             }
         }
 
         function closeModal() {
             stopSpeaking();
             document.getElementById('modal-backdrop').classList.add('hidden');
-            hideTooltip();
-
-            // Tour Logic: Guide to next section
+            
+            // Guide to next if tour is active
             if (isTourActive) {
+                const keys = Object.keys(CONTENT);
                 const nextIndex = currentTourIndex + 1;
-                if (nextIndex < POSTER_DATA.length) {
-                    const nextSection = POSTER_DATA[nextIndex];
-                    guideToSection(nextSection.id, nextSection.title);
+                if (nextIndex < keys.length) {
+                    const nextKey = keys[nextIndex];
+                    const nextData = CONTENT[nextKey][currentLang];
+                    guideToSection(nextKey, nextData.title);
                 } else {
-                    speak("You have reached the end of the tour. Thank you for viewing.");
+                    speak(LANGUAGES[currentLang].tourEnd);
                     stopTour();
                 }
             }
         }
 
-        // --- AUDIO TOUR LOGIC ---
-        let isTourActive = false;
-        let currentTourIndex = -1;
-        const synth = window.speechSynthesis;
-
+        // --- AUDIO TOUR ---
         function toggleTour() {
-            if (isTourActive) {
-                stopTour();
-            } else {
-                startTour();
-            }
+            isTourActive ? stopTour() : startTour();
         }
 
         function startTour() {
             isTourActive = true;
-            document.getElementById('tour-btn').classList.remove('bg-yellow-400', 'text-yellow-900');
-            document.getElementById('tour-btn').classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
-            document.getElementById('tour-text').innerText = "Stop Tour";
+            const t = LANGUAGES[currentLang];
+            const btn = document.getElementById('tour-btn');
+            btn.classList.remove('bg-yellow-400', 'text-yellow-900');
+            btn.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            document.getElementById('btn-tour').innerText = t.btnStopTour;
 
-            speak("Welcome to the interactive poster session. This study explores how a cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity. Please click on the Abstract to begin.");
-            
+            speak(t.welcomeSpeech);
             highlightSection('abstract');
         }
 
         function stopTour() {
             isTourActive = false;
             stopSpeaking();
-            document.getElementById('tour-btn').classList.add('bg-yellow-400', 'text-yellow-900');
-            document.getElementById('tour-btn').classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
-            document.getElementById('tour-text').innerText = "Start Audio Tour";
-            
-            // Remove all highlights
+            const t = LANGUAGES[currentLang];
+            const btn = document.getElementById('tour-btn');
+            btn.classList.add('bg-yellow-400', 'text-yellow-900');
+            btn.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+            document.getElementById('btn-tour').innerText = t.btnTour;
             document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
         }
 
         function guideToSection(id, title) {
             highlightSection(id);
-            speak(`Please continue by clicking on ${title}.`);
+            const t = LANGUAGES[currentLang];
+            speak(`${t.nextStep} ${title}.`);
         }
 
         function highlightSection(id) {
-            // Remove existing highlights
             document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
-            
             const card = document.getElementById(`card-${id}`);
             if(card) {
                 card.classList.add('tour-highlight');
@@ -508,67 +655,29 @@
         }
 
         function speak(text) {
-            if (synth.speaking) {
-                synth.cancel();
-            }
+            if (synth.speaking) synth.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Map our lang codes to SpeechSynthesis Lang codes
+            const langMap = { en: 'en-US', es: 'es-ES', de: 'de-DE', fr: 'fr-FR', zh: 'zh-CN', ja: 'ja-JP' };
+            utterance.lang = langMap[currentLang];
+            
             utterance.rate = 1.0; 
-            utterance.pitch = 1.0;
             synth.speak(utterance);
         }
 
         function stopSpeaking() {
-            if (synth.speaking) {
-                synth.cancel();
-            }
+            if (synth.speaking) synth.cancel();
         }
 
-        // --- TOOLTIP LOGIC ---
-        const tooltip = document.getElementById('tooltip');
-        
-        function showTooltip(e, word) {
-            const definition = DICTIONARY[word];
-            if(!definition) return;
-
-            document.getElementById('tooltip-title').innerText = word;
-            document.getElementById('tooltip-desc').innerText = definition;
-            
-            tooltip.classList.remove('hidden');
-            
-            // Position
-            const x = e.clientX;
-            const y = e.clientY;
-            
-            // Basic boundary check
-            const tooltipRect = tooltip.getBoundingClientRect();
-            let top = y - tooltipRect.height - 10;
-            let left = x - (tooltipRect.width / 2);
-
-            tooltip.style.top = `${top}px`;
-            tooltip.style.left = `${left}px`;
-        }
-
-        function hideTooltip() {
-            tooltip.classList.add('hidden');
-        }
-
-        // Event Delegation for Terms inside Modal
-        document.getElementById('modal-content').addEventListener('click', (e) => {
-            if(e.target.classList.contains('term')) {
-                e.stopPropagation();
-                showTooltip(e, e.target.dataset.word);
-            } else {
-                hideTooltip();
-            }
-        });
-
-        // Initialize
+        // Init
         renderGrid();
-        lucide.createIcons();
-
     </script>
 </body>
 </html>
+
+
+
 
 
 
