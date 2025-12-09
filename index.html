@@ -261,7 +261,7 @@
             },
             de: {
                 title: "Cyanobakterien-abgeleitetes RNA-Aptamer unterstützt die Hormonsensitivität bei Prostatakrebs",
-                authors: "Autoren:",
+                authors: "Autores:",
                 btnTour: "Audio-Tour Starten",
                 btnStopTour: "Tour Stoppen",
                 btnRead: "Papier Lesen",
@@ -424,7 +424,11 @@
                 ja: { title: "図 6: ナノ粒子", summary: "標的送達のための金ナノ粒子の使用。", text: "<p>標的枯渇は感受性を支持します。</p>" }
             },
             discussion: {
-                en: { title: "Discussion", summary: "PCa resistance is a leading cause of mortality...", text: "<p>Our work revealed a novel aptamer with catalytic enhancer properties for L-Gln depletion in coupling glutaminase activity.</p>" },
+                en: { 
+                    title: "Discussion", 
+                    summary: "PCa resistance is a leading cause of mortality...", 
+                    text: "<p>PCa resistance to AR signaling inhibitor therapy is a leading cause of mortality from the disease. Multiple approaches can be taken to address the observed elevation in L-Gln associated with hormone therapy resistance. As intracellular glutaminase inhibition and individual transporter strategies have not been effective, we chose to limit L-Gln access to the cancer cells. Choosing aptamers as a means of L-Gln targeting was not initially considered to be easily translatable due to the limited clinical examples of aptamer-based therapeutics. This is in part due to the challenges of cross-reactivity and specificity aptamers generated through Systematic Evolution of Ligands by EXponential (SELEX) enrichment platforms. Exploiting the evolutionary specificity advantage of the S. elongatus cyanobacterial glnA riboswitch and optimizations constrained to areas of less sequence conservation enabled a significant increase in L-Gln affinity. However, the depletion of L-Gln in preclinical PCa models was achievable due to the surprising role the aptamer played in catalyzing extracellular glutaminase activity. The added functionalization of AuNP with the L-Gln targeting aptamer allowed for tumor enrichment and restored sensitivity to AR antagonists, highlighting a potential therapeutic strategy to overcome CRPC.</p>" 
+                },
                 es: { title: "Discusión", summary: "La resistencia es una causa principal de mortalidad...", text: "<p>Nuestro trabajo reveló un nuevo aptámero con propiedades potenciadoras catalíticas para el agotamiento de L-Gln.</p>" },
                 de: { title: "Diskussion", summary: "Resistenz ist eine Hauptursache...", text: "<p>Unsere Arbeit enthüllte ein neuartiges Aptamer.</p>" },
                 fr: { title: "Discussion", summary: "La résistance est une cause majeure...", text: "<p>Notre travail a révélé un nouvel aptamère.</p>" },
@@ -588,9 +592,12 @@
                 const keys = Object.keys(CONTENT);
                 currentTourIndex = keys.indexOf(key);
                 
+                // Do not read references as requested
+                if (key === 'references') return; 
+
                 // Speak summary or clean text
                 let textToSpeak = document.getElementById('modal-content').innerText;
-                if(textToSpeak.length > 200) textToSpeak = textToSpeak.substring(0, 200); // Limit speech length
+                // Removed the length check to allow full reading
                 speak(textToSpeak);
             }
         }
@@ -678,6 +685,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
