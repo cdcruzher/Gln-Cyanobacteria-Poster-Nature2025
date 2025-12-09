@@ -1,0 +1,593 @@
+import React, { useState } from 'react';
+import { Maximize2, X, Info, FileText, Activity, Microscope, Zap, Target, BookOpen, Book, ArrowRight, ArrowDown, Dna, MousePointerClick, Image as ImageIcon, Download, ExternalLink } from 'lucide-react';
+
+// --- Types & Data ---
+
+type SectionId = 'abstract' | 'intro' | 'fig1' | 'fig2' | 'fig3' | 'fig4' | 'fig5' | 'fig6' | 'discussion' | 'references';
+
+interface SectionData {
+  id: SectionId;
+  title: string;
+  colSpan: number;
+  content: React.ReactNode;
+  icon?: React.ReactNode;
+  summary?: string;
+  color?: string;
+}
+
+// --- Dictionary Data & Component ---
+
+const DICTIONARY: Record<string, string> = {
+  "Adenocarcinoma": "A type of cancer that forms in the glandular tissue, which lines certain internal organs and makes and releases substances in the body, such as mucus, digestive juices, or other fluids.",
+  "Androgen receptor": "A protein that binds to androgens (male hormones like testosterone). It plays a key role in the development and maintenance of the male reproductive system and is a major driver of prostate cancer.",
+  "Glutamine": "An amino acid that is a building block of protein and a critical energy source for many cancer cells.",
+  "Riboswitches": "Segments of an mRNA molecule that bind to a specific small molecule, changing the production of the proteins encoded by the mRNA.",
+  "Cyanobacteria": "A phylum of bacteria that obtain their energy through photosynthesis. They are the only photosynthetic prokaryotes able to produce oxygen.",
+  "Aptamer": "Oligonucleotide or peptide molecules that bind to a specific target molecule. Aptamers are essentially 'chemical antibodies'.",
+  "Allosteric": "Relating to the alteration of the activity of a protein through the binding of an effector molecule at a specific site.",
+  "Glutaminase": "An enzyme that converts glutamine to glutamate and ammonia, playing a key role in metabolism.",
+  "Paracrine": "Relating to hormones which are released into the surrounding tissues and act on neighboring cells.",
+  "Xenografts": "A tissue graft or organ transplant from a donor of a different species from the recipient (e.g., human tumor cells in a mouse).",
+  "Orthotopic": "Occurring at the normal place. In cancer models, this means implanting tumor cells into the organ where the cancer originated (e.g., prostate cancer cells into the mouse prostate).",
+  "Kd": "The dissociation constant, a measure of how tightly a ligand binds to a protein. A lower Kd indicates tighter binding.",
+  "Seahorse experiment": "An assay using the Seahorse analyzer to measure cellular bioenergetics (respiration and glycolysis) in real-time.",
+  "Trypan blue": "A dye used to distinguish live cells from dead cells. Dead cells take up the dye and appear blue, while live cells exclude it.",
+  "FOXM1": "Forkhead Box M1, a transcription factor that regulates the expression of genes essential for cell proliferation and DNA repair.",
+  "Nanogold": "Gold nanoparticles used to label or detect specific biomolecules.",
+  "Oligonucleotides": "Short DNA or RNA molecules, oligomers, that have a wide range of applications in genetic testing, research, and forensics."
+};
+
+const Term = ({ word, children }: { word?: string, children: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const termKey = word || children;
+  
+  const definitionKey = Object.keys(DICTIONARY).find(k => k.toLowerCase() === termKey.toLowerCase());
+  const definition = definitionKey ? DICTIONARY[definitionKey] : null;
+
+  if (!definition) return <>{children}</>;
+
+  return (
+    <span className="relative inline-block">
+      <span 
+        className="cursor-help border-b-2 border-dotted border-blue-400 hover:bg-blue-100 hover:text-blue-800 transition-colors rounded-sm px-0.5"
+        onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
+        title="Click for definition"
+      >
+        {children}
+      </span>
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-10 cursor-default" 
+            onClick={(e) => { e.stopPropagation(); setIsOpen(false); }} 
+          />
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-800 text-white text-xs rounded shadow-xl z-20 animate-in fade-in zoom-in duration-150 text-left">
+            <div className="font-bold mb-1 border-b border-slate-600 pb-1 text-blue-200">{definitionKey}</div>
+            <p className="leading-relaxed">{definition}</p>
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+          </div>
+        </>
+      )}
+    </span>
+  );
+};
+
+// --- New Component: Figure Image Handler ---
+
+const FigureImage = ({ src, alt, placeholderText }: { src: string, alt: string, placeholderText?: string }) => {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div className="w-full h-64 bg-gray-50 rounded flex flex-col items-center justify-center border-2 border-dashed border-gray-300 mb-4 p-4 text-center">
+        <ImageIcon className="w-8 h-8 text-gray-300 mb-2" />
+        <span className="text-gray-500 italic mb-2 font-medium">{placeholderText || alt}</span>
+        <div className="text-xs text-red-400 bg-red-50 px-2 py-1 rounded border border-red-100 max-w-full truncate">
+           Missing: {src}
+        </div>
+        <p className="text-[10px] text-gray-400 mt-2">
+           (Place file in 'images' folder)
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-4 group relative">
+      <img 
+        src={src} 
+        alt={alt} 
+        className="w-full h-auto rounded-lg shadow-md border border-gray-200 cursor-zoom-in"
+        onError={() => setError(true)} 
+      />
+    </div>
+  );
+};
+
+// --- Components ---
+
+const GraphicalAbstract = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) => (
+  <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+    <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+      <div className="flex items-center gap-2">
+        <Zap className="w-5 h-5 text-blue-600" />
+        <h2 className="text-lg font-bold text-slate-800">Study Overview (Graphical Abstract)</h2>
+      </div>
+      <div className="text-xs text-slate-400 flex items-center gap-1">
+        <MousePointerClick size={14} />
+        Click icons to view details
+      </div>
+    </div>
+    
+    <div className="flex flex-col md:flex-row items-center justify-around gap-6 text-center">
+      <div onClick={() => onNavigate('fig1')} className="flex flex-col items-center group cursor-pointer relative">
+        <div className="w-20 h-20 bg-green-50 border-2 border-green-100 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 group-hover:border-green-400 group-hover:shadow-md transition-all shadow-sm z-10">
+           <Microscope className="w-8 h-8 text-green-600 group-hover:text-green-700 transition-colors" />
+        </div>
+        <p className="font-bold text-sm text-slate-700 group-hover:text-blue-700 transition-colors">Cyanobacteria</p>
+        <p className="text-xs text-slate-500 italic">(S. elongatus)</p>
+      </div>
+      <ArrowRight className="hidden md:block text-slate-300 w-8 h-8" />
+      <ArrowDown className="md:hidden text-slate-300 w-8 h-8" />
+      <div onClick={() => onNavigate('fig2')} className="flex flex-col items-center group cursor-pointer relative">
+         <div className="w-20 h-20 bg-blue-50 border-2 border-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 group-hover:border-blue-400 group-hover:shadow-md transition-all shadow-sm z-10">
+           <Dna className="w-8 h-8 text-blue-600 group-hover:text-blue-700 transition-colors" />
+         </div>
+         <p className="font-bold text-sm text-slate-700 group-hover:text-blue-700 transition-colors">RNA Aptamer</p>
+         <p className="text-xs text-slate-500 italic">56merA15</p>
+      </div>
+      <ArrowRight className="hidden md:block text-slate-300 w-8 h-8" />
+      <ArrowDown className="md:hidden text-slate-300 w-8 h-8" />
+      <div onClick={() => onNavigate('fig3')} className="flex flex-col items-center group cursor-pointer relative">
+         <div className="bg-slate-50 border-2 border-slate-200 rounded-lg p-3 w-40 text-left shadow-inner group-hover:border-orange-300 group-hover:bg-orange-50 group-hover:scale-105 transition-all">
+           <div className="flex items-center gap-2 mb-2 pb-1 border-b border-slate-200 group-hover:border-orange-200">
+              <Activity className="w-3 h-3 text-orange-500" />
+              <span className="text-xs font-bold text-slate-700">Mechanism</span>
+           </div>
+           <ul className="text-[11px] text-slate-600 space-y-1">
+             <li className="flex items-start gap-1">• Binds L-Gln</li>
+             <li className="flex items-start gap-1">• Activates GLS</li>
+             <li className="flex items-start gap-1">• Depletes Extracellular L-Gln</li>
+           </ul>
+        </div>
+      </div>
+      <ArrowRight className="hidden md:block text-slate-300 w-8 h-8" />
+      <ArrowDown className="md:hidden text-slate-300 w-8 h-8" />
+      <div onClick={() => onNavigate('fig5')} className="flex flex-col items-center group cursor-pointer relative">
+         <div className="w-20 h-20 bg-red-50 border-2 border-red-100 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 group-hover:border-red-400 group-hover:shadow-md transition-all shadow-sm z-10">
+           <Target className="w-8 h-8 text-red-600 group-hover:text-red-700 transition-colors" />
+         </div>
+         <p className="font-bold text-sm text-slate-700 group-hover:text-blue-700 transition-colors">Tumor Suppression</p>
+         <p className="text-xs text-slate-500 italic">Sensitivity Restored</p>
+      </div>
+    </div>
+  </div>
+);
+
+// --- Data ---
+
+const POSTER_DATA: SectionData[] = [
+  {
+    id: 'abstract',
+    title: 'Abstract',
+    colSpan: 1,
+    icon: <FileText className="w-5 h-5" />,
+    summary: 'Prostate adenocarcinoma (PCa) resistance to androgen receptor (AR) signaling inhibitor therapy is associated with elevated glutamine (L-Gln)...',
+    content: (
+      <div className="space-y-4">
+        <p>
+          Prostate <Term word="Adenocarcinoma">adenocarcinoma</Term> (PCa) resistance to <Term>Androgen receptor</Term> (AR) signaling inhibitor therapy is associated with elevated <Term>glutamine</Term> (L-Gln), but the underlying mechanism and therapeutic options stay unresolved.
+        </p>
+        <p>
+          <Term>Glutamine</Term> sensors, present in conserved <Term>riboswitches</Term> (glnA), control nitrogen metabolism in many organisms, like <Term>cyanobacteria</Term>. Iterative in silico modifications of glnA found in <em>Synechococcus elongatus</em> and thermodynamic analysis of a 56mer <Term>aptamer</Term> resulted in high L-Gln specificity and affinity.
+        </p>
+        <p>
+          <strong>Key Finding:</strong> The optimized <Term>aptamer</Term> depleted L-Gln from PCa cells by both L-Gln sequestration and the recruitment of extracellular <Term>glutaminase</Term> activity, serving as an <Term>allosteric</Term> activator.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'intro',
+    title: 'Introduction',
+    colSpan: 1,
+    icon: <Info className="w-5 h-5" />,
+    summary: 'Prostate cancer therapy resistance is a significant factor leading to cancer mortality in American men...',
+    content: (
+      <div className="space-y-4">
+        <p>
+          Prostate cancer therapy resistance is a significant factor leading to cancer mortality in American men. Androgen signaling plays a critical role in the development and progression of prostate cancer (PCa). Accordingly, it is the primary target for metastatic PCa and can complement first line therapies for localized disease.
+        </p>
+        <p>
+          However, inherent to the disease, there are multiple mechanisms can lead to PCa castrate resistance (CRPC), inclusive of <Term>androgen receptor</Term> (AR) amplification or loss, expression of AR splice variants, as well as <Term>paracrine</Term> factors.
+        </p>
+        <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+          <h4 className="font-bold text-blue-900">Hypothesis</h4>
+          <p className="text-sm text-blue-800 mt-1">
+            We reasoned that interrupting L-Gln uptake by its extracellular depletion in a tumor-specific manner can be a therapeutic strategy bypassing metabolic adaptation of a specific enzyme or transporter.
+          </p>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 'fig1',
+    title: 'Fig 1: Synechococcus elongatus glnA aptamer optimization',
+    colSpan: 1,
+    icon: <Microscope className="w-5 h-5" />,
+    summary: 'Optimization of the glnA aptamer through in silico modifications.',
+    content: (
+      <div className="space-y-4">
+        {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig1.png" 
+          alt="Figure 1: Aptamer Optimization" 
+          placeholderText="[Place 'fig1.png' in images folder to see Heatmap]"
+        />
+        <p>
+          <strong>(A)</strong> Sunburst plot illustrates the top level <Term>cyanobacteria</Term> taxonomic group in the center.
+        </p>
+        <p>
+          <strong>(B)</strong> Secondary structure showing the range of 'bulges' Watson-Crick G-C pair through P1 and B-Loop (blue dashed line).
+        </p>
+        <p>
+          <strong>(C)</strong> 3D structure of the 56mer bound to L-Gln within the B loop pocket. The binding pocket indicates the interacting nucleotides and magnesium (Mg++) in the transverse plane.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'fig2',
+    title: 'Fig 2: 56merA15-mediated L-Gln depletion',
+    colSpan: 1,
+    icon: <Activity className="w-5 h-5" />,
+    summary: 'Characterization of the aptamer\'s ability to deplete L-Gln.',
+    content: (
+      <div className="space-y-4">
+        {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig2.png" 
+          alt="Figure 2: L-Gln Depletion" 
+          placeholderText="[Place 'fig2.png' in images folder]"
+        />
+        <p>
+          Characterization of L-Gln binding <Term word="Aptamer">aptamers</Term>. Short complementary <Term word="Oligonucleotides">oligonucleotides</Term> were used to identify the L-Gln binding pocket through <Term word="Nanogold">nanogold</Term> binding assay.
+        </p>
+        <p>
+           The <Term>Kd</Term> was calculated to be 24.3 nM, indicating high affinity binding.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'fig3',
+    title: 'Fig 3: GLS - Aptamer cooperation',
+    colSpan: 1,
+    icon: <Zap className="w-5 h-5" />,
+    summary: 'Investigation of the cooperation between Glutaminase (GLS) and the aptamer.',
+    content: (
+      <div className="space-y-4">
+        {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig3.png" 
+          alt="Figure 3: GLS Cooperation" 
+          placeholderText="[Place 'fig3.png' in images folder]"
+        />
+        <p>
+          Characterization of L-Gln binding <Term word="Aptamer">aptamers</Term>. The interaction enhances the enzymatic activity, serving as an <Term>allosteric</Term> activator for <Term word="Glutaminase">GLS</Term>, leading to more efficient L-Gln depletion in the extracellular space.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'fig4',
+    title: 'Fig 4: L-Gln regulation of FGF8 and ARSi sensitivity',
+    colSpan: 1,
+    icon: <Activity className="w-5 h-5" />,
+    summary: 'Impact of L-Gln depletion on FGF8 expression and drug sensitivity.',
+    content: (
+      <div className="space-y-4">
+        {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig4.png" 
+          alt="Figure 4: Sensitivity Regulation" 
+          placeholderText="[Place 'fig4.png' in images folder]"
+        />
+        <p>
+          Impact of L-Gln depletion on 22Rv1 cells. Cells were preincubated with 2 mM L-Gln overnight, and oxygen consumption rate was measured.
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>(A)</strong> <Term>Seahorse experiment</Term> results showing oxygen consumption rates.</li>
+            <li><strong>(B)</strong> RNA Sequencing analysis of C4-2B and 22Rv1 treated with vehicle or 56mer for 48 hrs.</li>
+            <li><strong>(E)</strong> FGF8 promoter was tested in the presence and absence of 56merA15.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    id: 'fig5',
+    title: 'Fig 5: 56merA15 effect in vivo',
+    colSpan: 1,
+    icon: <Microscope className="w-5 h-5" />,
+    summary: 'Testing the efficacy of the 56merA15 aptamer in live models.',
+    content: (
+      <div className="space-y-4">
+         {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig5.png" 
+          alt="Figure 5: In Vivo Effect" 
+          placeholderText="[Place 'fig5.png' in images folder]"
+        />
+        <p>
+          L-Gln depletion complements AR inhibition. Surviving 22Rv1 cells were quantified by <Term>trypan blue</Term> exclusion.
+        </p>
+        <p>
+           <Term>Orthotopic</Term> graft tissues from mice treated with apalutamide in the presence or absence of 56merA15 were evaluated for the expression of <Term>FOXM1</Term> with protein control, GAPDH.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'fig6',
+    title: 'Fig 6: Tumor targeting by aptamer functionalization of gold nanoparticles',
+    colSpan: 1,
+    icon: <Target className="w-5 h-5" />,
+    summary: 'Using gold nanoparticles (AuNPs) for targeted delivery.',
+    content: (
+      <div className="space-y-4">
+         {/* Updated Image Component */}
+        <FigureImage 
+          src="images/fig6.png" 
+          alt="Figure 6: Nanoparticles" 
+          placeholderText="[Place 'fig6.png' in images folder]"
+        />
+        <p>
+          Targeted L-Gln depletion by 56merA15-AuNP support enzalutamide sensitivity.
+        </p>
+        <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
+          <p className="text-sm text-yellow-800">
+            <strong>Observation:</strong> The absorbance of 56merA15 functionalized gold nanoparticle (56merA15-AuNP) was measured by UV spectrophotometry.
+          </p>
+        </div>
+        <p>
+           Subcutaneous 22Rv1/CAF <Term word="Xenografts">xenografts</Term> were expanded for 2 weeks and treated. Tumor volumes were estimated longitudinally.
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'discussion',
+    title: 'Discussion',
+    colSpan: 1,
+    icon: <BookOpen className="w-5 h-5" />,
+    summary: 'PCa resistance to AR signaling inhibitor therapy is a leading cause of mortality...',
+    content: (
+      <div className="space-y-4">
+        <p>
+          PCa resistance to AR signaling inhibitor therapy is a leading cause of mortality from the disease. Multiple approaches can be taken to address the observed elevation in L-Gln associated with hormone therapy resistance.
+        </p>
+        <p>
+          Our work revealed a novel <Term>aptamer</Term> with catalytic enhancer properties for L-Gln depletion in coupling <Term>glutaminase</Term> activity.
+        </p>
+        <p>
+          We showed that <Term>glutamine</Term> depletion by the aptamer provide elevated killing and reduced proliferation of the tissue recombinant tumor models compared to AR inhibition alone (apalutamide or enzalutamide).
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 'references',
+    title: 'References',
+    colSpan: 1,
+    icon: <BookOpen className="w-5 h-5" />,
+    summary: 'Key citations for this study.',
+    content: (
+      <ol className="list-decimal pl-5 space-y-1 text-xs">
+        <li>Siegel RL, Giaquinto AN, Jemal A. Cancer statistics, 2024. CA Cancer J Clin 2024;74:12-49.</li>
+        <li>Xu L, Zhao E, Butler W, Xu H, Song N, Chen X, et al. Targeting glutamine metabolism... Oncogene 2022;41:1641-56.</li>
+        <li>Mishra, Rajeev, Subhadi Haldar, Veronica Placencio, et al. "Stromal Epigenetic Alterations Drive Metabolic and Neuroendocrine Prostate Cancer Reprogramming." J Clin Invest 2018.</li>
+        <li>Ames TD, Breaker RR. Bacterial aptamers that selectively bind glutamine. RNA Biol 2011;8:82-9.</li>
+      </ol>
+    )
+  }
+];
+
+const Modal = ({ section, onClose }: { section: SectionData, onClose: () => void }) => {
+  if (!section) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+      <div 
+        className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="p-4 bg-blue-700 text-white flex justify-between items-center shrink-0">
+          <div className="flex items-center gap-2">
+            {section.icon}
+            <h2 className="text-xl font-bold truncate">{section.title}</h2>
+          </div>
+          <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-full transition-colors">
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 overflow-y-auto grow">
+          <div className="prose prose-blue max-w-none">
+            {section.content}
+          </div>
+        </div>
+        
+        {/* Modal Footer */}
+        <div className="p-4 border-t bg-gray-50 text-right shrink-0">
+          <button 
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors"
+          >
+            Close Detail
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SectionCard = ({ section, onClick }: { section: SectionData, onClick: () => void }) => {
+  return (
+    <div 
+      onClick={onClick}
+      className="group relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all duration-300 flex flex-col h-full"
+    >
+      {/* Card Header */}
+      <div className="bg-blue-900 text-white p-2 px-3 flex justify-between items-center">
+        <h3 className="font-bold text-xs uppercase tracking-wider truncate flex-1">{section.title}</h3>
+        <Maximize2 className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+
+      {/* Card Body */}
+      <div className="p-4 flex-1 flex flex-col relative">
+        <div className="text-gray-600 text-sm line-clamp-6 leading-relaxed">
+          {section.summary}
+        </div>
+        
+        {/* Hover Overlay Hint */}
+        <div className="absolute inset-0 bg-blue-50/0 group-hover:bg-blue-50/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+          <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+            Click to Read
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function InteractivePoster() {
+  const [activeSectionId, setActiveSectionId] = useState<SectionId | null>(null);
+
+  const activeSection = POSTER_DATA.find(s => s.id === activeSectionId);
+
+  return (
+    <div className="min-h-screen bg-slate-100 flex flex-col font-sans text-slate-900">
+      
+      {/* --- Main Poster Header --- */}
+      <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start md:items-center">
+          
+          {/* Logo Placeholder */}
+          <div className="hidden md:flex flex-col items-center justify-center w-24 h-24 bg-white/10 rounded-full border-2 border-white/20 shrink-0">
+             <div className="text-3xl font-bold">CS</div>
+             <div className="text-[0.6rem] uppercase tracking-wider">Cedars Sinai</div>
+          </div>
+
+          <div className="flex-1">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight mb-3">
+              Cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity
+            </h1>
+            <div className="text-sm md:text-base text-blue-100 font-light space-y-1">
+              <p>
+                <strong>Authors:</strong> Carlos D. Cruz-Hernández¹, Bethany Smith¹, Sandrine Billet¹, Manish Thiruvalluvan¹, et al.
+              </p>
+              <p className="opacity-80 text-xs md:text-sm">
+                1. Department of Medicine, Cedars-Sinai Medical Center, Los Angeles, CA 90048
+              </p>
+            </div>
+
+            {/* Action Buttons & Dictionary Legend Container */}
+            <div className="mt-5 flex flex-col sm:flex-row sm:items-center gap-4">
+              
+              {/* External Links */}
+              <div className="flex items-center gap-3">
+                <a 
+                  href="https://pubmed.ncbi.nlm.nih.gov/40293223/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-105"
+                >
+                  <ExternalLink size={16} />
+                  Read Paper
+                </a>
+                
+                <a 
+                  href="images/poster-annotated.jpg" 
+                  download="poster-annotated.jpg"
+                  className="inline-flex items-center gap-2 bg-blue-900/50 hover:bg-blue-900/70 text-white px-4 py-2 rounded-lg text-sm font-medium border border-blue-400/30 transition-all hover:border-blue-300"
+                  title="Requires 'poster-annotated.jpg' in images folder"
+                >
+                  <Download size={16} />
+                  Save Poster
+                </a>
+              </div>
+
+              {/* Legend for Dictionary */}
+              <div className="flex items-center gap-2 text-xs text-blue-200 bg-blue-900/30 p-2 rounded border border-blue-500/30">
+                <Book size={14} className="shrink-0" />
+                <span>Tip: Click <span className="border-b-2 border-dotted border-blue-300">underlined words</span> for definitions.</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* --- Poster Grid Layout --- */}
+      <main className="flex-1 max-w-[1600px] mx-auto w-full p-4 md:p-6 lg:p-8">
+        
+        {/* Render Graphical Abstract at Top */}
+        <GraphicalAbstract onNavigate={setActiveSectionId} />
+
+        <div className="mb-4 text-center md:hidden">
+          <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
+            <Info size={16} /> Tap any section to view details
+          </p>
+        </div>
+
+        {/* Grid Structure mimicking the poster: 
+          4 Columns on Large screens.
+          Stacked on Mobile.
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full auto-rows-min">
+          
+          {/* Column 1: Abstract & Intro */}
+          <div className="flex flex-col gap-4">
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'abstract')!} onClick={() => setActiveSectionId('abstract')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'intro')!} onClick={() => setActiveSectionId('intro')} />
+          </div>
+
+          {/* Column 2: Figures 1, 2, 3 */}
+          <div className="flex flex-col gap-4">
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig1')!} onClick={() => setActiveSectionId('fig1')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig2')!} onClick={() => setActiveSectionId('fig2')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig3')!} onClick={() => setActiveSectionId('fig3')} />
+          </div>
+
+          {/* Column 3: Figures 4, 5 */}
+          <div className="flex flex-col gap-4">
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig4')!} onClick={() => setActiveSectionId('fig4')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig5')!} onClick={() => setActiveSectionId('fig5')} />
+          </div>
+
+          {/* Column 4: Figure 6, Discussion, References */}
+          <div className="flex flex-col gap-4">
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'fig6')!} onClick={() => setActiveSectionId('fig6')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'discussion')!} onClick={() => setActiveSectionId('discussion')} />
+             <SectionCard section={POSTER_DATA.find(s => s.id === 'references')!} onClick={() => setActiveSectionId('references')} />
+          </div>
+
+        </div>
+      </main>
+
+      {/* --- Footer --- */}
+      <footer className="bg-slate-200 p-4 text-center text-slate-500 text-xs">
+        <p>Interactive Poster Digital Twin • Created for Enhanced Accessibility</p>
+      </footer>
+
+      {/* --- Modal Overlay --- */}
+      {activeSection && (
+        <Modal section={activeSection} onClose={() => setActiveSectionId(null)} />
+      )}
+    </div>
+  );
+}
+
+
