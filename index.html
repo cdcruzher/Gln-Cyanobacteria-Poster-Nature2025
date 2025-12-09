@@ -71,8 +71,12 @@
                     Cyanobacteria-derived RNA aptamer supports prostate cancer hormone sensitivity
                 </h1>
                 <div class="text-sm md:text-base text-blue-100 font-light space-y-1">
-                    <p><strong id="label-authors">Authors:</strong> Carlos D. Cruz-Hernández¹, Bethany Smith¹, Sandrine Billet¹, Manish Thiruvalluvan¹, et al.</p>
-                    <p class="opacity-80 text-xs md:text-sm">1. Department of Medicine, Cedars-Sinai Medical Center, Los Angeles, CA 90048</p>
+                    <p><strong id="label-authors">Authors:</strong> Carlos D. Cruz-Hernández¹, Bethany Smith¹, Sandrine Billet¹, Manish Thiruvalluvan¹, Gabrielle Gonzales¹, David Underhill², Ekihiro Seki¹,²,³, Shelly C. Lu¹,³, Neil A. Bhowmick¹,²*</p>
+                    <div class="opacity-80 text-xs md:text-sm mt-2 space-y-0.5">
+                        <p>1. Department of Medicine, Cedars-Sinai Medical Center, Los Angeles, CA 90048</p>
+                        <p>2. Department of Biomedical Sciences, Cedars-Sinai Medical Center, Los Angeles, CA 90048</p>
+                        <p>3. Karsh Division of Gastroenterology and Hepatology, Cedars-Sinai Medical Center, Los Angeles, CA 90048</p>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -87,10 +91,6 @@
                     <a href="https://pubmed.ncbi.nlm.nih.gov/40293223/" target="_blank" rel="noopener noreferrer" 
                        class="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-105">
                         <i data-lucide="external-link" class="w-4 h-4"></i> <span id="btn-read">Read Paper</span>
-                    </a>
-                    <a href="poster-annotated.jpg" download="poster-annotated.jpg" 
-                       class="inline-flex items-center gap-2 bg-blue-900/50 hover:bg-blue-900/70 text-white px-4 py-2 rounded-lg text-sm font-medium border border-blue-400/30 transition-all hover:border-blue-300">
-                        <i data-lucide="download" class="w-4 h-4"></i> <span id="btn-save">Save Poster</span>
                     </a>
                 </div>
             </div>
@@ -376,15 +376,23 @@
                 ja: { title: "序論", summary: "前立腺癌治療抵抗性は、癌死亡の重要な要因です...", text: "<p>前立腺癌治療抵抗性は、癌死亡の重要な要因です。仮説：L-Gln取り込みを遮断することが治療戦略になり得ると推論しました。</p>" }
             },
             fig1: {
-                en: { title: "Fig 1: Aptamer Optimization", summary: "Optimization of the glnA aptamer through in silico modifications.", text: "<p>(A) Sunburst plot. (B) Secondary structure. (C) 3D structure of the 56mer bound to L-Gln.</p>" },
-                es: { title: "Fig 1: Optimización del Aptámero", summary: "Optimización del aptámero glnA mediante modificaciones in silico.", text: "<p>(A) Gráfico Sunburst. (B) Estructura secundaria. (C) Estructura 3D del 56mer unido a L-Gln.</p>" },
-                de: { title: "Abb 1: Aptamer-Optimierung", summary: "Optimierung des glnA-Aptamers.", text: "<p>(A) Sunburst-Diagramm. (B) Sekundärstruktur.</p>" },
-                fr: { title: "Fig 1: Optimisation de l'aptamère", summary: "Optimisation de l'aptamère glnA.", text: "<p>(A) Diagramme solaire. (B) Structure secondaire.</p>" },
-                zh: { title: "图 1: 适配体优化", summary: "通过计算机模拟修改优化 glnA 适配体。", text: "<p>(A) 旭日图。(B) 二级结构。</p>" },
-                ja: { title: "図 1: アプタマー最適化", summary: "インシリコ修飾によるglnAアプタマーの最適化。", text: "<p>(A) サンバースト図。(B) 二次構造。</p>" }
+                en: { 
+                    title: "Fig 1: Aptamer Optimization", 
+                    summary: "Optimization of the glnA aptamer through in silico modifications.", 
+                    text: "<p><strong>(A)</strong> Sunburst plot illustrates the top level cyanobacteria taxonomic group.</p><p><strong>(B)</strong> Secondary structure showing the long-range ‘linchpin’ Watson-Crick G-C pair through P1 and E-Loop.</p><p><strong>(C)</strong> 3D structure of the 56mer bound to L-Gln within the E loop pocket.</p><p><strong>(D)</strong> The L-Gln binding pocket indicates the interacting nucleotides and magnesium (Mg++) in the transverse plane.</p><p><strong>(E)</strong> A heatmap representation of relative binding affinity based on fluorescent intercalator displacement (FID) assay.</p>" 
+                },
+                es: { title: "Fig 1: Optimización del Aptámero", summary: "Optimización del aptámero glnA mediante modificaciones in silico.", text: "<p>(A) Gráfico Sunburst. (B) Estructura secundaria. (C) Estructura 3D del 56mer unido a L-Gln. (D) Estructura química del bolsillo de unión. (E) Diagrama de interacción.</p>" },
+                de: { title: "Abb 1: Aptamer-Optimierung", summary: "Optimierung des glnA-Aptamers.", text: "<p>(A) Sunburst-Diagramm. (B) Sekundärstruktur. (D) Chemische Struktur. (E) Interaktionsdiagramm.</p>" },
+                fr: { title: "Fig 1: Optimisation de l'aptamère", summary: "Optimisation de l'aptamère glnA.", text: "<p>(A) Diagramme solaire. (B) Structure secondaire. (D) Structure chimique. (E) Diagramme d'interaction.</p>" },
+                zh: { title: "图 1: 适配体优化", summary: "通过计算机模拟修改优化 glnA 适配体。", text: "<p>(A) 旭日图。(B) 二级结构。(D) 化学结构。(E) 相互作用图。</p>" },
+                ja: { title: "図 1: アプタマー最適化", summary: "インシリコ修飾によるglnAアプタマーの最適化。", text: "<p>(A) サンバースト図。(B) 二次構造。(D) 化学構造。(E) 相互作用図。</p>" }
             },
             fig2: {
-                en: { title: "Fig 2: L-Gln Depletion", summary: "Characterization of the aptamer's ability to deplete L-Gln.", text: "<p>Characterization of L-Gln binding. Kd was calculated to be 24.3 nM.</p>" },
+                en: { 
+                    title: "Fig 2: Characterization of L-Gln-binding aptamers", 
+                    summary: "Characterization of the aptamer's ability to deplete L-Gln.", 
+                    text: "<p><strong>(A)</strong> Short complementary oligonucleotides were used to identify the L-Gln binding pocket through nanogolds binding assay. Colorimetric changes of the nanogolds due to oligonucleotide interruption of the 56merA15/L-Gln interaction were measured.</p><p><strong>(B)</strong> 67merA15, 60merA15, 56merA15 and mut56merA15 L-Gln binding kinetics (KD) were calculated by gold nanoparticle-based colorimetric assay.</p><p><strong>(C)</strong> Fluorescent intercalator displacement (FID) assay was used to determine the kinetics of L-Gln binding to 56merA15 and mut56merA15 in the indicated timescale.</p><p><strong>(D)</strong> Internalization kinetics (Kint) of [ 3H]-labeled L-Gln was determined in the context of increasing concentrations of 56merA15.</p>"
+                },
                 es: { title: "Fig 2: Agotamiento de L-Gln", summary: "Caracterización de la capacidad del aptámero para agotar L-Gln.", text: "<p>Caracterización de la unión a L-Gln. La Kd se calculó en 24.3 nM.</p>" },
                 de: { title: "Abb 2: L-Gln-Verarmung", summary: "Charakterisierung der L-Gln-Verarmung.", text: "<p>Charakterisierung der Bindung. Kd betrug 24.3 nM.</p>" },
                 fr: { title: "Fig 2: Épuisement de L-Gln", summary: "Caractérisation de l'épuisement.", text: "<p>Caractérisation de la liaison. Kd était de 24.3 nM.</p>" },
@@ -392,7 +400,11 @@
                 ja: { title: "図 2: L-Gln 枯渇", summary: "L-Glnを枯渇させるアプタマー能力の特性評価。", text: "<p>結合の特性評価。Kdは24.3 nMと計算されました。</p>" }
             },
             fig3: {
-                en: { title: "Fig 3: GLS Cooperation", summary: "Investigation of cooperation between Glutaminase (GLS) and aptamer.", text: "<p>Interaction enhances enzymatic activity, serving as an allosteric activator for GLS.</p>" },
+                en: { 
+                    title: "Fig 3: GLS Cooperation", 
+                    summary: "Investigation of cooperation between Glutaminase (GLS) and aptamer.", 
+                    text: "<p><strong>(D)</strong> Michaelis-Menten kinetics of GLS1 was calculated in the presence and absence of 56merA15, where the Vmax of GLS1 was found to be 1.70 mM/min and the addition of 56merA15 increased it to 1.85 mM/min. The KM was calculated to 0.93 mM and 0.96 mM, respectively.</p><p><strong>(E)</strong> GLS1 and GLS2 expression in 22Rv1 cells under L-Gln and 56merA15 treatment.</p><p><strong>(F)</strong> GLS1 activity in conditioned media was measured as a factor of glutamate generated in 5 min by addition of 56merA15 in a concentration-dependent manner.</p>"
+                },
                 es: { title: "Fig 3: Cooperación GLS", summary: "Investigación de la cooperación entre Glutaminasa y el aptámero.", text: "<p>La interacción mejora la actividad enzimática, sirviendo como activador alostérico.</p>" },
                 de: { title: "Abb 3: GLS-Kooperation", summary: "Untersuchung der Kooperation.", text: "<p>Interaktion verstärkt enzymatische Aktivität.</p>" },
                 fr: { title: "Fig 3: Coopération GLS", summary: "Investigation de la coopération.", text: "<p>L'interaction améliore l'activité enzymatique.</p>" },
@@ -400,7 +412,11 @@
                 ja: { title: "図 3: GLS 協力", summary: "グルタミナーゼ (GLS) とアプタマー間の協力の調査。", text: "<p>相互作用は酵素活性を高めます。</p>" }
             },
             fig4: {
-                en: { title: "Fig 4: FGF8 Regulation", summary: "Impact of L-Gln depletion on FGF8 and drug sensitivity.", text: "<p>(A) Seahorse experiment results showing oxygen consumption rates.</p>" },
+                en: { 
+                    title: "Fig 4: Impact of L-Gln depletion", 
+                    summary: "Impact of L-Gln depletion on 22Rv1 cells.", 
+                    text: "<p><strong>(A)</strong> In the Seahorse experiment, the 22Rv1 cells were preincubated with 2 mM Gln overnight, and oxygen consumption rate was measured in response to L-Glnfree media (vehicle) or 2 mM L-Gln in the presence or absence of 56merA15 for the duration of the study.</p><p><strong>(B)</strong> RNA sequencing analysis of C4-2B and 22Rv1 treated with vehicle or 56mer for 48 hrs. Common significantly up and down regulated genes in the two cell lines are indicated in the volcano plot.</p><p><strong>(C)</strong> Enriched analysis identified transcription factor pathways up and down regulated, common to 22Rv1 and C4-2B cells in response to the 56mer. Combined score enrichment (p-value x z-score) indicated.</p><p><strong>(D)</strong> Correlation analysis of FOXM1 and FGF8 expression was performed on the Taylor dataset (27).</p><p><strong>(E)</strong> ChIP analysis for FOXM1 enrichment on the FGF8 promoter was tested in the presence and absence of the 56merA15 in 22Rv1 cells. IgG and RNA polymerase II (Pol II) were used as negative and positive controls, respectively. The percentage of viable cells was normalized versus the treatment control.</p>" 
+                },
                 es: { title: "Fig 4: Regulación de FGF8", summary: "Impacto del agotamiento de L-Gln en FGF8.", text: "<p>(A) Resultados del experimento Seahorse mostrando tasas de consumo de oxígeno.</p>" },
                 de: { title: "Abb 4: FGF8-Regulation", summary: "Auswirkung auf FGF8.", text: "<p>(A) Seahorse-Experiment Ergebnisse.</p>" },
                 fr: { title: "Fig 4: Régulation FGF8", summary: "Impact sur FGF8.", text: "<p>(A) Résultats de l'expérience Seahorse.</p>" },
@@ -408,7 +424,11 @@
                 ja: { title: "図 4: FGF8 調節", summary: "L-Gln 枯渇が FGF8 に与える影響。", text: "<p>(A) シーホース実験結果。</p>" }
             },
             fig5: {
-                en: { title: "Fig 5: In Vivo Effect", summary: "Testing efficacy in live models.", text: "<p>L-Gln depletion complements AR inhibition. Surviving cells quantified by trypan blue.</p>" },
+                en: { 
+                    title: "Fig 5: L-Gln depletion complements AR inhibition", 
+                    summary: "Testing efficacy in live models.", 
+                    text: "<p><strong>(D)</strong> Surviving 22Rv1 cells were quantified by trypan blue excluded cell counting 48 hours after indicated treatments in the presence or absence of 2 mM L-Gln.</p><p><strong>(E)</strong> Vehicle (saline) or 56merA15 treatment of subcutaneously grafted tissue recombinants of 22Rv1 and carcinoma associated fibroblasts had differential TUNEL and phosphorylated histone H3 (p-HH3) immunohistochemical staining.</p><p><strong>(F)</strong> Orthotopically grafted tissue recombinants of 22Rv1 and CAF were treated with apalutamide alone or in the presence of 56merA15 resulted in differential TUNEL and p-HH3 immunohistochemical staining.</p><p><strong>(G)</strong> Orthotopic tumors from mice treated with apalutamide in the presence or absence of 56merA15 were evaluated for the expression of FOXM1 with protein control, GAPDH, by western blot.</p><p><strong>(H)</strong> The same tissues were evaluated for the indicated PCa lineage plasticity markers using rtPCR in triplicate.</p>"
+                },
                 es: { title: "Fig 5: Efecto In Vivo", summary: "Probando eficacia en modelos vivos.", text: "<p>El agotamiento complementa la inhibición de AR. Células supervivientes cuantificadas.</p>" },
                 de: { title: "Abb 5: In-vivo-Effekt", summary: "Testen der Wirksamkeit.", text: "<p>Verarmung ergänzt AR-Hemmung.</p>" },
                 fr: { title: "Fig 5: Effet In Vivo", summary: "Test de l'efficacité.", text: "<p>L'épuisement complète l'inhibition des RA.</p>" },
@@ -416,7 +436,11 @@
                 ja: { title: "図 5: 生体内の効果", summary: "生体モデルでの有効性試験。", text: "<p>枯渇はAR阻害を補完します。</p>" }
             },
             fig6: {
-                en: { title: "Fig 6: Nanoparticles", summary: "Using gold nanoparticles for targeted delivery.", text: "<p>Targeted depletion by 56merA15-AuNP support enzalutamide sensitivity.</p>" },
+                en: { 
+                    title: "Fig 6: Targeted L-Gln depletion by 56merA15-AuNP support enzalutamide sensitivity", 
+                    summary: "Using gold nanoparticles for targeted delivery.", 
+                    text: "<p><strong>(A)</strong> The absorbance of a 56merA15 functionalized gold nanoparticle (56merA15-AuNP) was measured by UV spectrophotometry at indicated concentrations of aptamer.</p><p><strong>(B)</strong> Subcutaneous 22Rv1/CAF xenografts were expanded for 2 weeks and treated for an additional 2 weeks with vehicle or enzalutamide, with and without either mut56merA15-AuNP or 56merA15-AuNP. Tumor volumes were estimated longitudinally.</p><p><strong>(C)</strong> Orthotopically grafted C42B E-R/CAF tissue recombinants were expanded for 5 weeks prior to intraperitoneal treatment with 56merA15 or 56merA15-AuNP in the presence of enzalutamide for two weeks. Final tumor weights were measured.</p><p><strong>(D)</strong> Histochemical analysis on the orthotopic tumors demonstrated differential silver enhanced AuNP, as well survivin and p-HH3 immunohistochemical localization was quantitated. In addition, RNA from frozen tumor tissues were analyzed for the expression of FOXM1 and FGF8.</p>"
+                },
                 es: { title: "Fig 6: Nanopartículas", summary: "Uso de nanopartículas de oro para entrega dirigida.", text: "<p>El agotamiento dirigido por 56merA15-AuNP apoya la sensibilidad.</p>" },
                 de: { title: "Abb 6: Nanopartikel", summary: "Verwendung von Goldnanopartikeln.", text: "<p>Gezielte Verarmung unterstützt Sensitivität.</p>" },
                 fr: { title: "Fig 6: Nanoparticules", summary: "Utilisation de nanoparticules d'or.", text: "<p>L'épuisement ciblé soutient la sensibilité.</p>" },
@@ -472,7 +496,6 @@
             document.getElementById('label-authors').innerText = t.authors;
             document.getElementById('btn-tour').innerText = isTourActive ? t.btnStopTour : t.btnTour;
             document.getElementById('btn-read').innerText = t.btnRead;
-            document.getElementById('btn-save').innerText = t.btnSave;
             document.getElementById('footer-text').innerText = t.footer;
             document.getElementById('btn-close-modal').innerText = t.closeDetail;
             
@@ -685,6 +708,10 @@
     </script>
 </body>
 </html>
+
+
+
+
 
 
 
