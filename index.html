@@ -41,12 +41,12 @@
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans min-h-screen flex flex-col">
 
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg relative">
-        <!-- Language Selector (Top Right) -->
-        <div class="absolute top-4 right-4 z-20">
+    <!-- Language Bar (Separate row to prevent overlap) -->
+    <div class="bg-blue-900 text-white p-3 flex justify-end items-center shadow-md z-30">
+        <div class="flex items-center gap-2">
+            <i data-lucide="globe" class="w-5 h-5 text-blue-300"></i>
             <select id="lang-select" onchange="changeLanguage(this.value)" 
-                    class="bg-blue-900 text-white text-xs py-1 px-2 rounded border border-blue-400 focus:outline-none focus:border-white">
+                    class="bg-blue-800 text-white text-sm font-medium py-2 px-4 rounded border border-blue-600 focus:outline-none focus:border-blue-400 hover:bg-blue-700 transition-colors cursor-pointer shadow-sm">
                 <option value="en">🇺🇸 English</option>
                 <option value="es">🇪🇸 Español</option>
                 <option value="de">🇩🇪 Deutsch</option>
@@ -55,8 +55,11 @@
                 <option value="ja">🇯🇵 日本語</option>
             </select>
         </div>
+    </div>
 
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start md:items-center mt-6 md:mt-0">
+    <!-- Main Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 items-start md:items-center">
             <!-- Logo -->
             <div class="hidden md:flex flex-col items-center justify-center w-24 h-24 bg-white/10 rounded-full border-2 border-white/20 shrink-0">
                 <div class="text-3xl font-bold">CS</div>
@@ -85,7 +88,7 @@
                        class="inline-flex items-center gap-2 bg-white text-blue-900 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-105">
                         <i data-lucide="external-link" class="w-4 h-4"></i> <span id="btn-read">Read Paper</span>
                     </a>
-                    <a href="images/poster-annotated.jpg" download="poster-annotated.jpg" 
+                    <a href="poster-annotated.jpg" download="poster-annotated.jpg" 
                        class="inline-flex items-center gap-2 bg-blue-900/50 hover:bg-blue-900/70 text-white px-4 py-2 rounded-lg text-sm font-medium border border-blue-400/30 transition-all hover:border-blue-300">
                         <i data-lucide="download" class="w-4 h-4"></i> <span id="btn-save">Save Poster</span>
                     </a>
@@ -111,7 +114,7 @@
             </div>
             
             <div class="flex flex-col md:flex-row items-center justify-around gap-6 text-center">
-                <!-- GA Steps (Static Icons, Dynamic Text) -->
+                <!-- GA Steps -->
                 <div onclick="openModal('fig1')" class="flex flex-col items-center group cursor-pointer relative transition-transform hover:scale-105">
                     <div class="w-20 h-20 bg-green-50 border-2 border-green-100 rounded-full flex items-center justify-center mb-3 group-hover:border-green-400 group-hover:shadow-md transition-all shadow-sm">
                         <i data-lucide="microscope" class="w-8 h-8 text-green-600"></i>
@@ -230,7 +233,7 @@
                 nextStep: "Please continue by clicking on",
                 tourEnd: "You have reached the end of the tour. Thank you for viewing.",
                 missingImg: "Image not found",
-                placeImg: "Please ensure file exists in images/ folder"
+                placeImg: "Please ensure file exists in root folder (same as index.html)"
             },
             es: {
                 title: "El aptámero de ARN derivado de cianobacterias apoya la sensibilidad hormonal del cáncer de próstata",
@@ -254,7 +257,7 @@
                 nextStep: "Por favor continúe haciendo clic en",
                 tourEnd: "Ha llegado al final del recorrido. Gracias por ver.",
                 missingImg: "Imagen no encontrada",
-                placeImg: "Asegúrese de que el archivo exista en la carpeta images/"
+                placeImg: "Asegúrese de que el archivo exista en la misma carpeta que index.html"
             },
             de: {
                 title: "Cyanobakterien-abgeleitetes RNA-Aptamer unterstützt die Hormonsensitivität bei Prostatakrebs",
@@ -278,7 +281,7 @@
                 nextStep: "Bitte fahren Sie fort, indem Sie auf klicken",
                 tourEnd: "Sie haben das Ende der Tour erreicht. Danke fürs Zuschauen.",
                 missingImg: "Bild nicht gefunden",
-                placeImg: "Datei muss im Ordner images/ sein"
+                placeImg: "Datei muss im selben Ordner wie index.html sein"
             },
             fr: {
                 title: "L'aptamère d'ARN dérivé de cyanobactéries soutient la sensibilité hormonale du cancer de la prostate",
@@ -302,7 +305,7 @@
                 nextStep: "Veuillez continuer en cliquant sur",
                 tourEnd: "Vous avez atteint la fin de la visite. Merci.",
                 missingImg: "Image non trouvée",
-                placeImg: "Vérifiez le dossier images/"
+                placeImg: "Vérifiez le dossier racine"
             },
             zh: {
                 title: "蓝细菌来源的RNA适配体支持前列腺癌激素敏感性",
@@ -326,7 +329,7 @@
                 nextStep: "请继续点击",
                 tourEnd: "您已到达导览终点。谢谢观看。",
                 missingImg: "未找到图片",
-                placeImg: "请确保文件在 images/ 文件夹中"
+                placeImg: "请确保文件在根文件夹中"
             },
             ja: {
                 title: "シアノバクテリア由来RNAアプタマーは前立腺癌のホルモン感受性を支持する",
@@ -350,7 +353,7 @@
                 nextStep: "次をクリックしてください：",
                 tourEnd: "ツアーの終わりに達しました。ご覧いただきありがとうございます。",
                 missingImg: "画像が見つかりません",
-                placeImg: "images/フォルダを確認してください"
+                placeImg: "ルートフォルダを確認してください"
             }
         };
 
@@ -446,12 +449,12 @@
 
         // Image Map to ensure correct image is loaded per ID
         const IMG_MAP = {
-            fig1: 'images/fig1.png',
-            fig2: 'images/fig2.png',
-            fig3: 'images/fig3.png',
-            fig4: 'images/fig4.png',
-            fig5: 'images/fig5.png',
-            fig6: 'images/fig6.png'
+            fig1: 'fig1.png',
+            fig2: 'fig2.png',
+            fig3: 'fig3.png',
+            fig4: 'fig4.png',
+            fig5: 'fig5.png',
+            fig6: 'fig6.png'
         };
 
         // --- CORE FUNCTIONS ---
@@ -675,6 +678,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
